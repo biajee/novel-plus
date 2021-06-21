@@ -110,7 +110,7 @@
 		update author 
 		<set>
 			<if test="userId != null">`user_id` = #{userId}, </if>
-			<if test="inviteCode != null">`invite_code` = #{inviteCode}, </if>
+			<!-- <if test="inviteCode != null">`invite_code` = #{inviteCode}, </if> -->
 			<if test="penName != null">`pen_name` = #{penName}, </if>
 			<if test="telPhone != null">`tel_phone` = #{telPhone}, </if>
 			<if test="chatAccount != null">`chat_account` = #{chatAccount}, </if>
