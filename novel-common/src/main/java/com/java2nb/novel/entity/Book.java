@@ -1,8 +1,11 @@
 package com.java2nb.novel.entity;
 
+import com.java2nb.novel.core.valid.AddGroup;
+
 import java.io.Serializable;
 import java.util.Date;
 import javax.annotation.Generated;
+import javax.validation.constraints.Null;
 
 public class Book implements Serializable{
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
@@ -22,6 +25,9 @@ public class Book implements Serializable{
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private String bookName;
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    private String blockchainAddress;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private Long authorId;
@@ -141,6 +147,16 @@ public class Book implements Serializable{
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public void setBookName(String bookName) {
         this.bookName = bookName == null ? null : bookName.trim();
+    }
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public String getBlockchainAddress() {
+        return blockchainAddress;
+    }
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public void setBlockchainAddress(String inBlockchainAddress) {
+        this.blockchainAddress = inBlockchainAddress == null ? null : inBlockchainAddress.trim();
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")

@@ -34,6 +34,7 @@ import static com.java2nb.novel.mapper.UserBookshelfDynamicSqlSupport.userBooksh
 import static com.java2nb.novel.mapper.UserDynamicSqlSupport.*;
 import static com.java2nb.novel.mapper.UserFeedbackDynamicSqlSupport.userFeedback;
 import static com.java2nb.novel.mapper.UserReadHistoryDynamicSqlSupport.userReadHistory;
+import static com.java2nb.novel.mapper.UserTokenListDynamicSqlSupport.userTokenList;
 import static org.mybatis.dynamic.sql.SqlBuilder.*;
 import static org.mybatis.dynamic.sql.select.SelectDSL.select;
 
@@ -55,7 +56,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserBuyRecordMapper userBuyRecordMapper;
 
-
+    // List the balance of each token
+    private final UserTokenListMapper userTokenListMapper;
 
     @Override
     public UserDetails register(User user) {
@@ -345,7 +347,21 @@ public class UserServiceImpl implements UserService {
                 .render(RenderingStrategies.MYBATIS3));
     }
 
-
+    @Override
+    public PageBean<UserTokenList> listTokenBalanceByPage(Long userId, int page, int pageSize) {
+        PageHelper.startPage(page, pageSize);
+    SelectStatementProvider selectStatement = select(UserTokenListDynamicSqlSupport.content, UserTokenListDynamicSqlSupport.createTime)
+            .from(userTokenList)
+            .where(UserTokenListDynamicSqlSupport.userId, isEqualTo(userId))
+            .orderBy(UserTokenListDynamicSqlSupport.id.descending())
+            .build()
+            .render(RenderingStrategies.MYBATIS3);
+    List<UserTokenList> userTokenLists = userTokenListMapper.selectMany(selectStatement);
+    PageBean<UserTokenList> pageBean = new PageBean<>(userTokenLists);
+//        pageBean.setList(BeanUtil.copyList(userFeedbacks,UserFeedbackVO.class));
+        return pageBean;
+//        return new PageBean<>(userTokenListMapper.listTokenBalance(userId));
+    }
 
 
 

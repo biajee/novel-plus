@@ -13,7 +13,6 @@ public class User {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private Long id;
 
-
     @NotBlank(groups = {AddGroup.class},message="手机号不能为空！")
     @Pattern(groups = {AddGroup.class},regexp="^1[3|4|5|6|7|8|9][0-9]{9}$",message="手机号格式不正确！")
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
@@ -27,6 +26,10 @@ public class User {
     @Null(groups = {AddGroup.class})
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private String nickName;
+
+    @Null(groups = {AddGroup.class})
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    private String blockchainAddress;
 
     @Null(groups = {AddGroup.class})
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
@@ -92,6 +95,16 @@ public class User {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public void setNickName(String nickName) {
         this.nickName = nickName == null ? null : nickName.trim();
+    }
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public String getBlockchainAddress() {
+        return blockchainAddress;
+    }
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public void setBlockchainAddress(String inBlockchainAddress) {
+        this.blockchainAddress = inBlockchainAddress == null ? null : inBlockchainAddress.trim();
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")

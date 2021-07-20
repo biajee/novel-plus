@@ -29,7 +29,7 @@ import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 @Mapper
 public interface UserMapper {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    BasicColumn[] selectList = BasicColumn.columnList(id, username, password, nickName, userPhoto, userSex, accountBalance, status, createTime, updateTime);
+    BasicColumn[] selectList = BasicColumn.columnList(id, username, password, nickName, blockchainAddress, userPhoto, userSex, accountBalance, status, createTime, updateTime);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
@@ -59,6 +59,7 @@ public interface UserMapper {
         @Result(column="username", property="username", jdbcType=JdbcType.VARCHAR),
         @Result(column="password", property="password", jdbcType=JdbcType.VARCHAR),
         @Result(column="nick_name", property="nickName", jdbcType=JdbcType.VARCHAR),
+            @Result(column="blockchain_address", property="blockchainAddress", jdbcType=JdbcType.VARCHAR),
         @Result(column="user_photo", property="userPhoto", jdbcType=JdbcType.VARCHAR),
         @Result(column="user_sex", property="userSex", jdbcType=JdbcType.TINYINT),
         @Result(column="account_balance", property="accountBalance", jdbcType=JdbcType.BIGINT),
@@ -96,6 +97,7 @@ public interface UserMapper {
             .map(username).toProperty("username")
             .map(password).toProperty("password")
             .map(nickName).toProperty("nickName")
+                    .map(blockchainAddress).toProperty("blockchainAddress")
             .map(userPhoto).toProperty("userPhoto")
             .map(userSex).toProperty("userSex")
             .map(accountBalance).toProperty("accountBalance")
@@ -112,6 +114,7 @@ public interface UserMapper {
             .map(username).toProperty("username")
             .map(password).toProperty("password")
             .map(nickName).toProperty("nickName")
+                    .map(blockchainAddress).toProperty("blockchainAddress")
             .map(userPhoto).toProperty("userPhoto")
             .map(userSex).toProperty("userSex")
             .map(accountBalance).toProperty("accountBalance")

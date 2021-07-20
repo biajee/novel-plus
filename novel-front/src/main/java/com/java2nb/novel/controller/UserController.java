@@ -273,8 +273,15 @@ public class UserController extends BaseController {
         return ResultBean.ok();
     }
 
-
-
-
-
+    /**
+     * 分页查询通证的余额情况
+     * */
+    @GetMapping("listTokenBalanceByPage")
+    public ResultBean listTokenBalanceByPage(@RequestParam(value = "curr", defaultValue = "1") int page, @RequestParam(value = "limit", defaultValue = "10") int pageSize,HttpServletRequest request) {
+        UserDetails userDetails = getUserDetails(request);
+        if (userDetails == null) {
+            return ResultBean.fail(ResponseStatus.NO_LOGIN);
+        }
+        return ResultBean.ok(userService.listTokenBalanceByPage(userDetails.getId(),page,pageSize));
+    }
 }

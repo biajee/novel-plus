@@ -17,6 +17,9 @@ public final class UserDynamicSqlSupport {
     public static final SqlColumn<String> username = user.username;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public static final SqlColumn<String> blockchainAddress = user.blockchainAddress;
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final SqlColumn<String> password = user.password;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
@@ -49,6 +52,8 @@ public final class UserDynamicSqlSupport {
         public final SqlColumn<String> password = column("password", JDBCType.VARCHAR);
 
         public final SqlColumn<String> nickName = column("nick_name", JDBCType.VARCHAR);
+
+        public final SqlColumn<String> blockchainAddress = column("blockchain_address", JDBCType.VARCHAR);
 
         public final SqlColumn<String> userPhoto = column("user_photo", JDBCType.VARCHAR);
 

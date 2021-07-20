@@ -5,6 +5,7 @@ import com.java2nb.novel.core.bean.PageBean;
 import com.java2nb.novel.core.bean.UserDetails;
 import com.java2nb.novel.entity.UserBuyRecord;
 import com.java2nb.novel.entity.UserFeedback;
+import com.java2nb.novel.entity.UserTokenList;
 import com.java2nb.novel.vo.BookReadHistoryVO;
 import com.java2nb.novel.vo.BookShelfVO;
 import com.java2nb.novel.entity.User;
@@ -176,4 +177,14 @@ public interface UserService {
      * @return 订阅人数
      */
     int queryBuyTotalMember(List<Long> bookIds, Date startTime, Date endTime);
+
+    /**
+     * 查询用户通证余额
+     * @param userId 用户ID
+     * @param page
+     * @param pageSize
+     * @return 通证分页信息
+     * */
+    PageBean<UserTokenList> listTokenBalanceByPage(Long userId, int page, int pageSize);
+
 }
