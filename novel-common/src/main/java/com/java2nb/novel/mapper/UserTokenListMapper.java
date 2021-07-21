@@ -46,12 +46,13 @@ public interface UserTokenListMapper {
         @Result(column="token_balance", property="tokenBalance", jdbcType=JdbcType.BIGINT),
         @Result(column="create_time", property="createTime", jdbcType=JdbcType.TIMESTAMP),
         @Result(column="update_time", property="updateTime", jdbcType=JdbcType.TIMESTAMP)
-    })
+    }) List<UserTokenList> selectMany(SelectStatementProvider selectStatement);
+
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     long count(SelectStatementProvider selectStatement);
 
-    List<UserTokenList> selectMany(SelectStatementProvider selectStatement);
+
 
 }

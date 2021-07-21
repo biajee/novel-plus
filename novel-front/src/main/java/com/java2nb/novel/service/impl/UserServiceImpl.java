@@ -220,7 +220,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User userInfo(Long userId) {
-        SelectStatementProvider selectStatement = select(username, nickName, userPhoto,userSex,accountBalance)
+        SelectStatementProvider selectStatement = select(username, nickName, blockchainAddress, userPhoto,userSex,accountBalance)
                 .from(user)
                 .where(id, isEqualTo(userId))
                 .build()
@@ -350,7 +350,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public PageBean<UserTokenList> listTokenBalanceByPage(Long userId, int page, int pageSize) {
         PageHelper.startPage(page, pageSize);
-    SelectStatementProvider selectStatement = select(UserTokenListDynamicSqlSupport.content, UserTokenListDynamicSqlSupport.createTime)
+    SelectStatementProvider selectStatement = select(UserTokenListDynamicSqlSupport.bookId, UserTokenListDynamicSqlSupport.bookBlockchainAddress, UserTokenListDynamicSqlSupport.tokenBalance)
             .from(userTokenList)
             .where(UserTokenListDynamicSqlSupport.userId, isEqualTo(userId))
             .orderBy(UserTokenListDynamicSqlSupport.id.descending())

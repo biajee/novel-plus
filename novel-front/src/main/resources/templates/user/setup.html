@@ -36,6 +36,7 @@
                         <li><i class="tit">我的昵称</i><a href="/user/set_name.html" id="my_name"></a></li>
                         <li style="display:none"><i class="tit">电子邮箱</i><a href="javascript:void(0);"></a></li>
                         <li><i class="tit">我的性别</i><a href="/user/set_sex.html" id="my_sex"></a></li>
+                        <li><i class="tit">我的钱包</i><a href="/user/set_wallet.html" id="blockchain_address"></a></li>
                         <li><i class="tit">我的密码</i><a href="/user/set_password.html">修改密码</a></li>
                         <li><i class="tit">当前状态</i><a href="javascript:logout()">退出登录</a></li>
                     </ul>
@@ -75,7 +76,8 @@
                     $("#my_sex").html("请选择");
                 }
 
-
+                // 钱包地址
+                $("#blockchain_address").html(data.data.blockchainAddress);
 
             } else if (data.code == 1001) {
                 //未登录
