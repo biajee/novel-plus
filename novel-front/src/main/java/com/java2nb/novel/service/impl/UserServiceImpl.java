@@ -350,7 +350,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public PageBean<UserTokenList> listTokenBalanceByPage(Long userId, int page, int pageSize) {
         PageHelper.startPage(page, pageSize);
-    SelectStatementProvider selectStatement = select(UserTokenListDynamicSqlSupport.bookId, UserTokenListDynamicSqlSupport.bookBlockchainAddress, UserTokenListDynamicSqlSupport.tokenBalance)
+    SelectStatementProvider selectStatement = select(UserTokenListDynamicSqlSupport.bookName, UserTokenListDynamicSqlSupport.bookBlockchainAddress, UserTokenListDynamicSqlSupport.tokenBalance, UserTokenListDynamicSqlSupport.updateBlockHeight, UserTokenListDynamicSqlSupport.updateTime)
             .from(userTokenList)
             .where(UserTokenListDynamicSqlSupport.userId, isEqualTo(userId))
             .orderBy(UserTokenListDynamicSqlSupport.id.descending())

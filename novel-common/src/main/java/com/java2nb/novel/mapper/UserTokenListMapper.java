@@ -29,7 +29,7 @@ import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 @Mapper
 public interface UserTokenListMapper {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    BasicColumn[] selectList = BasicColumn.columnList(id, userId, bookId, bookBlockchainAddress, tokenBalance,createTime, updateTime);
+    BasicColumn[] selectList = BasicColumn.columnList(id, userId, bookId, bookName, bookBlockchainAddress, tokenBalance,updateTime,updateBlockHeight);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
@@ -42,17 +42,16 @@ public interface UserTokenListMapper {
         @Result(column="id", property="id", jdbcType=JdbcType.BIGINT, id=true),
         @Result(column="user_id", property="userId", jdbcType=JdbcType.BIGINT),
         @Result(column="book_id", property="bookId", jdbcType=JdbcType.BIGINT),
+            @Result(column="book_name", property="bookName", jdbcType=JdbcType.VARCHAR),
             @Result(column="book_blockchain_address", property="bookBlockchainAddress", jdbcType=JdbcType.VARCHAR),
         @Result(column="token_balance", property="tokenBalance", jdbcType=JdbcType.BIGINT),
-        @Result(column="create_time", property="createTime", jdbcType=JdbcType.TIMESTAMP),
-        @Result(column="update_time", property="updateTime", jdbcType=JdbcType.TIMESTAMP)
+        @Result(column="update_time", property="updateTime", jdbcType=JdbcType.TIMESTAMP),
+            @Result(column="update_block_height", property="updateBlockHeight", jdbcType=JdbcType.BIGINT)
     }) List<UserTokenList> selectMany(SelectStatementProvider selectStatement);
 
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     long count(SelectStatementProvider selectStatement);
-
-
 
 }

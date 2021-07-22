@@ -11,7 +11,7 @@
 <div class="main box_center cf">
     <div class="userBox cf">
         <div class="viewhistoryBox">
-            <div class="my_bookshelf">
+            <div class="my_tokenlist">
                 <div class="title cf">
                     <h2 class="fl ml10"><a href="javascript:void(0);" class="red">通证列表</a></h2><i class="fl ml20 mr20 font16">|</i><h2 class="fl"><a href="javascript:void(0);" class="red">我的书架</a></h2><i class="fl ml20 mr20 font16">|</i><h2 class="fl"><a href="/user/read_history.html" >最近阅读</a></h2>
                 </div>
@@ -73,6 +73,7 @@
             dataType: "json",
             success: function (data) {
                 if (data.code == 200) {
+                console.log("/user/listTokenBalanceByPage.data:\n", data.data.list,"\n==================\n");
                     var tokenList = data.data.list;
                     if (tokenList.length > 0) {
                         var tokenListHtml = "";
@@ -80,20 +81,20 @@
                             var token = tokenList[i];
                             tokenListHtml+=(" <tr class=\"book_list\" vals=\"291\">\n" +
                                 "                            <td class=\"style bookclass\">\n" +
-                                "                                <a href=\"/book/bookclass.html?c="+token.bookId+"\" >["+token.bookId+"]</a>\n" +
+                                "                                <a href=\"/book/bookclass.html?c="+token.bookName+"\" >["+token.bookName+"]</a>\n" +
                                 "                            </td>\n" +
                                 "                            <td class=\"name\">\n" +
                                 "                                <a href=\"/book/"+token.blockchainAddress+".html\">\n" +
-                                "                                    "+token.bookBlockchainAddress+"</a>\n" +
+                                "                                    "+token.blockchainAddress+"</a>\n" +
                                 "                            </td>\n" +
                                 "                            <td class=\"chapter\" valsc=\"291|2037554|1\">\n" +
-                                "<a href='/book/"+book.bookId+"/"+token.tokenBalance+".html'>"+token.tokenBalance+"</a>"+
+                                "<a href='/book/"+token.bookId+"/"+token.tokenBalance+".html'>"+token.tokenBalance+"</a>"+
                                 "                            </td>\n" +
                                 "                            <td class=\"time\">\n" +
                                 "                                "+token.updateTime+"\n" +
                                 "                            </td>\n" +
                                 "                            <td class=\"goread\">\n" +
-                                "<a href='/book/"+book.bookId+"/"+book.preContentId+".html'>通证详情</a>"+
+                                "<a href='/book/"+token.bookId+"/"+token.blockchainAddress+".html'>通证详情</a>"+
                                 "                            </td>\n" +
                                 "                        </tr>");
                         }

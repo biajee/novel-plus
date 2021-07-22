@@ -1640,23 +1640,25 @@ INSERT INTO `user_read_history` VALUES ('118', '1255060328322027520', '125495731
 
 -- ----------------------------
 -- Table structure for user_token_list
+-- 通证与作品为一一对应
 -- ----------------------------
 DROP TABLE IF EXISTS `user_token_list`;
 CREATE TABLE `user_token_list` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `user_id` bigint(20) NOT NULL COMMENT '用户ID',
   `book_id` bigint(20) NOT NULL COMMENT '小说ID',
+  `book_name` varchar(50) DEFAULT NULL COMMENT '小说名',
   `book_blockchain_address` varchar(42) DEFAULT NULL COMMENT '作品区块链合约地址0x开头',
   `token_balance` bigint(20) DEFAULT NULL COMMENT '作品区块链合约通证数量',
-  `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
+  `update_block_height` bigint(20) NOT NULL COMMENT '通证更新的区块高度',
   PRIMARY KEY (`id`),
   UNIQUE KEY `key_uq_userid_bookid` (`user_id`,`book_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COMMENT='用户通证列表';
 
-INSERT INTO `user_token_list` VALUES ('11', '1413956884249956352','1414650094664269824','0xe592303d955ca9c515a7d62f374cf46cbeb42dfb','100','2021-02-04 10:53:51', '2021-07-14 10:53:51');
-INSERT INTO `user_token_list` VALUES ('12', '1413956884249956352','1414653690969579520','0x03afc7ca5b56434ebcf8f03eb80f9c52d6b36fed','100','2021-04-07 10:53:51', '2021-07-15 10:53:51');
-INSERT INTO `user_token_list` VALUES ('13', '1413956884249956352','1414653961212780544','0x48b106f4bf30f9ef83557141341c060e6d954e19','100','2021-05-29 10:53:51', '2021-07-12 08:52:37');
+INSERT INTO `user_token_list` VALUES ('11', '1413956884249956352','1414650094664269824','测试1','0xe592303d955ca9c515a7d62f374cf46cbeb42dfb','101','2021-07-14 10:53:51','0');
+INSERT INTO `user_token_list` VALUES ('12', '1413956884249956352','1414653690969579520','测试2','0x03afc7ca5b56434ebcf8f03eb80f9c52d6b36fed','102', '2021-07-15 10:53:51','0');
+INSERT INTO `user_token_list` VALUES ('13', '1413956884249956352','1414653961212780544','测试3','0x48b106f4bf30f9ef83557141341c060e6d954e19','103', '2021-07-12 08:52:37','0');
 
 -- ----------------------------
 -- Table structure for book_content0

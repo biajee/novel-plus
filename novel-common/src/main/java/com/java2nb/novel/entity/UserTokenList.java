@@ -14,13 +14,16 @@ public class UserTokenList {
     private Long bookId;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    private String bookName;
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private String bookBlockchainAddress;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private Long tokenBalance;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    private Date createTime;
+    private Long updateBlockHeight;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private Date updateTime;
@@ -56,6 +59,16 @@ public class UserTokenList {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public String getBookName() {
+        return bookName;
+    }
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public void setBookName(String inBookName) {
+        this.bookName = inBookName == null ? null : inBookName.trim();
+    }
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public String getBlockchainAddress() {
         return bookBlockchainAddress;
     }
@@ -76,14 +89,15 @@ public class UserTokenList {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public Date getCreateTime() {
-        return createTime;
+    public Long getUpdateBlockHeight() {
+        return updateBlockHeight;
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setUpdateBlockHeight(Long inBlockHeight) {
+        this.updateBlockHeight = inBlockHeight;
     }
+
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public Date getUpdateTime() {

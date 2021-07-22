@@ -4,12 +4,19 @@
 
 [![Github stars](https://img.shields.io/github/stars/201206030/novel-plus?logo=github)](https://github.com/201206030/novel-plus)
 [![Github forks](https://img.shields.io/github/forks/201206030/novel-plus?logo=github)](https://github.com/201206030/novel-plus)
-[![Gitee star](https://gitee.com/novel_dev_team/novel-plus/badge/star.svg?theme=gitee)](https://gitee.com/novel_dev_team/novel-plus)
-[![Gitee fork](https://gitee.com/novel_dev_team/novel-plus/badge/fork.svg?theme=gitee)](https://gitee.com/novel_dev_team/novel-plus)
 
 #### 官网
 
 https://xiongxyang.gitee.io
+
+#### 区块链版开发说明
+
+github分支develop_blockchain,
+
+需要用doc/sql/novel_blockchain.sql 生成带区块链信息的数据
+
+增加新的API使用
+
 
 #### 新项目：小说精品屋-微服务版
 
