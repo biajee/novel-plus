@@ -57,7 +57,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public String register(Long userId, Author author) {
-        // Date currentDate = new Date();
+        Date currentDate = new Date();
         //判断邀请码是否有效
         // if (authorCodeMapper.count(c ->
         //         c.where(AuthorCodeDynamicSqlSupport.inviteCode, isEqualTo(author.getInviteCode()))
