@@ -138,7 +138,7 @@ public class PayController extends BaseController {
 
             out.println("success");
 
-            httpResponse.sendRedirect("/pay/index.html");
+            httpResponse.sendRedirect("/pay");
 
 
         }else {//验证失败
