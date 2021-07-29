@@ -91,7 +91,7 @@ public class PayController extends BaseController {
     public void aliPayNotify(HttpServletRequest request,HttpServletResponse httpResponse){
 
 
-        // PrintWriter out = httpResponse.getWriter();
+        PrintWriter out = httpResponse.getWriter();
 
         // //获取支付宝POST过来反馈信息
         // Map<String,String> params = new HashMap<String,String>();
