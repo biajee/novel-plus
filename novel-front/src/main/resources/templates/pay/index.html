@@ -102,14 +102,15 @@
 
         var payType = $("#ulPayType").find("li.on").attr("valp");
 
-        if(payType == 2){
-            layer.alert("微信支付暂未开通，敬请期待");
-            return ;
-        }
+        // if(payType == 3){
+        //     layer.alert("墨客支付暂未开通，敬请期待");
+        //     return ;
+        // }
 
         $("#pValue").val($(this).attr("vals"));
 
         $("#payform").submit();
+        
 
 
 
