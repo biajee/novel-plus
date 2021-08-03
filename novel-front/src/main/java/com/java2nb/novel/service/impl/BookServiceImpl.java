@@ -157,12 +157,20 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> listClickRank() {
-        List<Book> result = (List<Book>) cacheService.getObject(CacheKey.INDEX_CLICK_BANK_BOOK_KEY);
-        if (result == null || result.size() == 0) {
-            result = listRank((byte) 0, 10);
-            cacheService.setObject(CacheKey.INDEX_CLICK_BANK_BOOK_KEY, result, 5000);
+        // Add some error catch to debug the issue
+        try {
+            List<Book> result = (List<Book>) cacheService.getObject(CacheKey.INDEX_CLICK_BANK_BOOK_KEY);
+            if (result == null || result.size() == 0) {
+                result = listRank((byte) 0, 10);
+                cacheService.setObject(CacheKey.INDEX_CLICK_BANK_BOOK_KEY, result, 5000);
+            }
+
+            return result;
+        }catch(Exception e){
+            log.debug("获取book错误:"+e);
         }
-        return result;
+
+        return null;
     }
 
     @Override
@@ -430,6 +438,7 @@ public class BookServiceImpl implements BookService {
             BookAuthor bookAuthor = new BookAuthor();
             bookAuthor.setId(authorId);
             bookAuthor.setPenName(authorName);
+            bookAuthor.setBlockchainAddress("");
             bookAuthor.setWorkDirection(workDirection);
             bookAuthor.setStatus((byte) 1);
             bookAuthor.setCreateTime(currentDate);
@@ -509,6 +518,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void addBook(Book book, Long authorId, String penName) {
         //判断小说名是否存在
+        //需要再次判断小说相关的区块链地址账户
         if (queryIdByNameAndAuthor(book.getBookName(), penName) != null) {
             //该作者发布过此书名的小说
             throw new BusinessException(ResponseStatus.BOOKNAME_EXISTS);

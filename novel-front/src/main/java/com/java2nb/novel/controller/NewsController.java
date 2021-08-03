@@ -3,6 +3,7 @@ package com.java2nb.novel.controller;
 import com.github.pagehelper.PageInfo;
 import com.java2nb.novel.core.bean.ResultBean;
 import com.java2nb.novel.service.NewsService;
+import com.java2nb.novel.service.BlockchainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 public class NewsController {
 
     private final NewsService newsService;
+
+//    @Autowired
+//    private final BlockchainService blockchainService;
 
     /**
      * 查询首页新闻
@@ -34,6 +38,13 @@ public class NewsController {
         return ResultBean.ok(newsService.listByPage(page,pageSize));
     }
 
+    /**
+     * 查询区块链最新区块高度
+     * */
+//    @GetMapping("listBlockchainHeight")
+//    public ResultBean listBlockchainHeight(){
+//        return ResultBean.ok(blockchainService.getBlockNumber());
+//    }
 
 
 }

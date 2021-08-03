@@ -6,7 +6,6 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 /**
@@ -116,8 +115,5 @@ public class EhCacheServiceImpl implements CacheService {
 		cache.put(element);
 		
 	}
-
-
-
 
 }

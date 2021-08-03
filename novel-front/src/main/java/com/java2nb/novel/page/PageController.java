@@ -81,6 +81,7 @@ public class PageController extends BaseController {
     @RequestMapping(path = {"/", "/index", "/index.html"})
     public String index(Model model) {
         model.addAttribute("bookMap", bookService.listBookSettingVO());
+        log.debug("加载首页结束");
         return ThreadLocalUtil.getTemplateDir() + "index";
     }
 
@@ -261,6 +262,7 @@ public class PageController extends BaseController {
         //查询新闻
         News news = newsService.queryNewsInfo(newsId);
         model.addAttribute("news", news);
+        log.debug("加载新闻结束");
         return "about/news_info";
     }
 
@@ -281,6 +283,7 @@ public class PageController extends BaseController {
             String errorInfo = authorService.register(user.getId(), author);
             if (StringUtils.isBlank(errorInfo)) {
                 //注册成功
+                log.debug("注册成功");
                 return "redirect:/author/index.html";
             }
             model.addAttribute("LabErr", errorInfo);

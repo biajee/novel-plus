@@ -37,7 +37,7 @@ import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 @Mapper
 public interface BookMapper {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    BasicColumn[] selectList = BasicColumn.columnList(id, workDirection, catId, catName, picUrl, bookName, authorId, authorName, bookDesc, score, bookStatus, visitCount, wordCount, commentCount, yesterdayBuy, lastIndexId, lastIndexName, lastIndexUpdateTime, isVip, status, updateTime, createTime, crawlSourceId, crawlBookId, crawlLastTime, crawlIsStop);
+    BasicColumn[] selectList = BasicColumn.columnList(id, workDirection, catId, catName, picUrl, bookName,blockchainAddress, authorId, authorName, authorAddress, bookDesc, score, bookStatus, visitCount, wordCount, commentCount, yesterdayBuy, lastIndexId, lastIndexName, lastIndexUpdateTime, isVip, status, updateTime, createTime, crawlSourceId, crawlBookId, crawlLastTime, crawlIsStop);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type = SqlProviderAdapter.class, method = "select")
@@ -69,8 +69,10 @@ public interface BookMapper {
             @Result(column = "cat_name", property = "catName", jdbcType = JdbcType.VARCHAR),
             @Result(column = "pic_url", property = "picUrl", jdbcType = JdbcType.VARCHAR),
             @Result(column = "book_name", property = "bookName", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "blockchain_address", property = "blockchainAddress", jdbcType = JdbcType.VARCHAR),
             @Result(column = "author_id", property = "authorId", jdbcType = JdbcType.BIGINT),
             @Result(column = "author_name", property = "authorName", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "author_address", property = "authorAddress", jdbcType = JdbcType.VARCHAR),
             @Result(column = "book_desc", property = "bookDesc", jdbcType = JdbcType.VARCHAR),
             @Result(column = "score", property = "score", jdbcType = JdbcType.REAL),
             @Result(column = "book_status", property = "bookStatus", jdbcType = JdbcType.TINYINT),
@@ -122,8 +124,10 @@ public interface BookMapper {
                         .map(catName).toProperty("catName")
                         .map(picUrl).toProperty("picUrl")
                         .map(bookName).toProperty("bookName")
+                        .map(blockchainAddress).toProperty("blockchainAddress")
                         .map(authorId).toProperty("authorId")
                         .map(authorName).toProperty("authorName")
+                        .map(authorAddress).toProperty("authorAddress")
                         .map(bookDesc).toProperty("bookDesc")
                         .map(score).toProperty("score")
                         .map(bookStatus).toProperty("bookStatus")
@@ -154,8 +158,10 @@ public interface BookMapper {
                         .map(catName).toProperty("catName")
                         .map(picUrl).toProperty("picUrl")
                         .map(bookName).toProperty("bookName")
+                        .map(blockchainAddress).toProperty("blockchainAddress")
                         .map(authorId).toProperty("authorId")
                         .map(authorName).toProperty("authorName")
+                        .map(authorAddress).toProperty("authorAddress")
                         .map(bookDesc).toProperty("bookDesc")
                         .map(score).toProperty("score")
                         .map(bookStatus).toProperty("bookStatus")
@@ -186,8 +192,10 @@ public interface BookMapper {
                         .map(catName).toPropertyWhenPresent("catName", record::getCatName)
                         .map(picUrl).toPropertyWhenPresent("picUrl", record::getPicUrl)
                         .map(bookName).toPropertyWhenPresent("bookName", record::getBookName)
+                        .map(blockchainAddress).toPropertyWhenPresent("blockchainAddress", record::getBlockchainAddress)
                         .map(authorId).toPropertyWhenPresent("authorId", record::getAuthorId)
                         .map(authorName).toPropertyWhenPresent("authorName", record::getAuthorName)
+                        .map(authorAddress).toPropertyWhenPresent("authorAddress", record::getAuthorAddress)
                         .map(bookDesc).toPropertyWhenPresent("bookDesc", record::getBookDesc)
                         .map(score).toPropertyWhenPresent("score", record::getScore)
                         .map(bookStatus).toPropertyWhenPresent("bookStatus", record::getBookStatus)
@@ -244,8 +252,10 @@ public interface BookMapper {
                 .set(catName).equalTo(record::getCatName)
                 .set(picUrl).equalTo(record::getPicUrl)
                 .set(bookName).equalTo(record::getBookName)
+                .set(blockchainAddress).equalTo(record::getBlockchainAddress)
                 .set(authorId).equalTo(record::getAuthorId)
                 .set(authorName).equalTo(record::getAuthorName)
+                .set(authorAddress).equalTo(record::getAuthorAddress)
                 .set(bookDesc).equalTo(record::getBookDesc)
                 .set(score).equalTo(record::getScore)
                 .set(bookStatus).equalTo(record::getBookStatus)
@@ -274,8 +284,10 @@ public interface BookMapper {
                 .set(catName).equalToWhenPresent(record::getCatName)
                 .set(picUrl).equalToWhenPresent(record::getPicUrl)
                 .set(bookName).equalToWhenPresent(record::getBookName)
+                .set(blockchainAddress).equalToWhenPresent(record::getBlockchainAddress)
                 .set(authorId).equalToWhenPresent(record::getAuthorId)
                 .set(authorName).equalToWhenPresent(record::getAuthorName)
+                .set(authorAddress).equalToWhenPresent(record::getAuthorAddress)
                 .set(bookDesc).equalToWhenPresent(record::getBookDesc)
                 .set(score).equalToWhenPresent(record::getScore)
                 .set(bookStatus).equalToWhenPresent(record::getBookStatus)
@@ -304,8 +316,10 @@ public interface BookMapper {
                         .set(catName).equalTo(record::getCatName)
                         .set(picUrl).equalTo(record::getPicUrl)
                         .set(bookName).equalTo(record::getBookName)
+                        .set(blockchainAddress).equalTo(record::getBlockchainAddress)
                         .set(authorId).equalTo(record::getAuthorId)
                         .set(authorName).equalTo(record::getAuthorName)
+                        .set(authorAddress).equalTo(record::getAuthorAddress)
                         .set(bookDesc).equalTo(record::getBookDesc)
                         .set(score).equalTo(record::getScore)
                         .set(bookStatus).equalTo(record::getBookStatus)
@@ -336,8 +350,10 @@ public interface BookMapper {
                         .set(catName).equalToWhenPresent(record::getCatName)
                         .set(picUrl).equalToWhenPresent(record::getPicUrl)
                         .set(bookName).equalToWhenPresent(record::getBookName)
+                        .set(blockchainAddress).equalToWhenPresent(record::getBlockchainAddress)
                         .set(authorId).equalToWhenPresent(record::getAuthorId)
                         .set(authorName).equalToWhenPresent(record::getAuthorName)
+                        .set(authorAddress).equalToWhenPresent(record::getAuthorAddress)
                         .set(bookDesc).equalToWhenPresent(record::getBookDesc)
                         .set(score).equalToWhenPresent(record::getScore)
                         .set(bookStatus).equalToWhenPresent(record::getBookStatus)

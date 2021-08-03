@@ -35,7 +35,7 @@ import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 @Mapper
 public interface BookAuthorMapper {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    BasicColumn[] selectList = BasicColumn.columnList(id, inviteCode, penName, telPhone, chatAccount, email, workDirection, status, createTime, createUserId, updateTime, updateUserId);
+    BasicColumn[] selectList = BasicColumn.columnList(id, inviteCode, penName, blockchainAddress, telPhone, chatAccount, email, workDirection, status, createTime, createUserId, updateTime, updateUserId);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
@@ -64,6 +64,7 @@ public interface BookAuthorMapper {
         @Result(column="id", property="id", jdbcType=JdbcType.BIGINT, id=true),
         @Result(column="invite_code", property="inviteCode", jdbcType=JdbcType.VARCHAR),
         @Result(column="pen_name", property="penName", jdbcType=JdbcType.VARCHAR),
+            @Result(column="blockchain_address", property="blockchainAddress", jdbcType=JdbcType.VARCHAR),
         @Result(column="tel_phone", property="telPhone", jdbcType=JdbcType.VARCHAR),
         @Result(column="chat_account", property="chatAccount", jdbcType=JdbcType.VARCHAR),
         @Result(column="email", property="email", jdbcType=JdbcType.VARCHAR),
@@ -103,6 +104,7 @@ public interface BookAuthorMapper {
             c.map(id).toProperty("id")
             .map(inviteCode).toProperty("inviteCode")
             .map(penName).toProperty("penName")
+            .map(blockchainAddress).toProperty("blockchainAddress")
             .map(telPhone).toProperty("telPhone")
             .map(chatAccount).toProperty("chatAccount")
             .map(email).toProperty("email")
@@ -121,6 +123,7 @@ public interface BookAuthorMapper {
             c.map(id).toProperty("id")
             .map(inviteCode).toProperty("inviteCode")
             .map(penName).toProperty("penName")
+                    .map(blockchainAddress).toProperty("blockchainAddress")
             .map(telPhone).toProperty("telPhone")
             .map(chatAccount).toProperty("chatAccount")
             .map(email).toProperty("email")
@@ -139,6 +142,7 @@ public interface BookAuthorMapper {
             c.map(id).toPropertyWhenPresent("id", record::getId)
             .map(inviteCode).toPropertyWhenPresent("inviteCode", record::getInviteCode)
             .map(penName).toPropertyWhenPresent("penName", record::getPenName)
+                    .map(blockchainAddress).toPropertyWhenPresent("blochainAddress", record::getBlockchainAddress)
             .map(telPhone).toPropertyWhenPresent("telPhone", record::getTelPhone)
             .map(chatAccount).toPropertyWhenPresent("chatAccount", record::getChatAccount)
             .map(email).toPropertyWhenPresent("email", record::getEmail)
@@ -183,6 +187,7 @@ public interface BookAuthorMapper {
         return dsl.set(id).equalTo(record::getId)
                 .set(inviteCode).equalTo(record::getInviteCode)
                 .set(penName).equalTo(record::getPenName)
+                .set(blockchainAddress).equalTo(record::getBlockchainAddress)
                 .set(telPhone).equalTo(record::getTelPhone)
                 .set(chatAccount).equalTo(record::getChatAccount)
                 .set(email).equalTo(record::getEmail)
@@ -199,6 +204,7 @@ public interface BookAuthorMapper {
         return dsl.set(id).equalToWhenPresent(record::getId)
                 .set(inviteCode).equalToWhenPresent(record::getInviteCode)
                 .set(penName).equalToWhenPresent(record::getPenName)
+                .set(blockchainAddress).equalToWhenPresent(record::getBlockchainAddress)
                 .set(telPhone).equalToWhenPresent(record::getTelPhone)
                 .set(chatAccount).equalToWhenPresent(record::getChatAccount)
                 .set(email).equalToWhenPresent(record::getEmail)
@@ -215,6 +221,7 @@ public interface BookAuthorMapper {
         return update(c ->
             c.set(inviteCode).equalTo(record::getInviteCode)
             .set(penName).equalTo(record::getPenName)
+                    .set(blockchainAddress).equalTo(record::getBlockchainAddress)
             .set(telPhone).equalTo(record::getTelPhone)
             .set(chatAccount).equalTo(record::getChatAccount)
             .set(email).equalTo(record::getEmail)
@@ -233,6 +240,7 @@ public interface BookAuthorMapper {
         return update(c ->
             c.set(inviteCode).equalToWhenPresent(record::getInviteCode)
             .set(penName).equalToWhenPresent(record::getPenName)
+                    .set(blockchainAddress).equalToWhenPresent(record::getBlockchainAddress)
             .set(telPhone).equalToWhenPresent(record::getTelPhone)
             .set(chatAccount).equalToWhenPresent(record::getChatAccount)
             .set(email).equalToWhenPresent(record::getEmail)

@@ -36,6 +36,9 @@ public class Book implements Serializable{
     private String authorName;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    private String authorAddress;
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private String bookDesc;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
@@ -100,6 +103,16 @@ public class Book implements Serializable{
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public String getAuthorAddress() {
+        return authorAddress;
+    }
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public void setAuthorAddress(String authorAddress) {
+        this.authorAddress = authorAddress;
+    }
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public Byte getWorkDirection() {
         return workDirection;
     }
@@ -155,8 +168,8 @@ public class Book implements Serializable{
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setBlockchainAddress(String inBlockchainAddress) {
-        this.blockchainAddress = inBlockchainAddress == null ? null : inBlockchainAddress.trim();
+    public void setBlockchainAddress(String blockchainAddress) {
+        this.blockchainAddress = blockchainAddress == null ? null : blockchainAddress.trim();
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")

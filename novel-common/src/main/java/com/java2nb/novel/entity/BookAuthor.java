@@ -14,6 +14,9 @@ public class BookAuthor {
     private String penName;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    private String blockchainAddress;
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private String telPhone;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
@@ -68,6 +71,16 @@ public class BookAuthor {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public void setPenName(String penName) {
         this.penName = penName == null ? null : penName.trim();
+    }
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public String getBlockchainAddress() {
+        return blockchainAddress;
+    }
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public void setBlockchainAddress(String blockchainAddress) {
+        this.blockchainAddress = blockchainAddress;
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")

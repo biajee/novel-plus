@@ -117,10 +117,6 @@ String.prototype.isNickName = function () {
     return false;
 };
 
-
-
-
-
 function logout() {
     $.cookie('Authorization', null,{ path: '/'  });
     location.reload();

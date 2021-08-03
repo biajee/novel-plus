@@ -31,6 +31,7 @@
                         </p>
                     <ul class="my_list">
                         <li class="my_blockchain_address"><i>区块链地址：</i><em class="red" id="blockchain_address"></em></li>
+                        <li class="my_blockchain_height"><i>区块链高度：</i><em class="red" id="blockchain_height"></em></li>
                         <li class="my_gold"><i>账户余额：</i><em class="red" id="accountBalance">0</em>通证<!--<em class="red">+</em><em class="red">0</em>代金券--><a href="/pay/index.html" class="btn_link">立即充值</a></li>
                         <li class="my_baonian"></li>
 
@@ -114,6 +115,7 @@
             layer.alert('网络异常');
         }
     })
+
     //查询书架列表
     $.ajax({
         type: "get",
@@ -158,6 +160,7 @@
             layer.alert('网络异常');
         }
     })
+
 
 </script>
 </body>

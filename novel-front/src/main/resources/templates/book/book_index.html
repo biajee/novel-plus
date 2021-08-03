@@ -36,6 +36,9 @@
                                                                                   th:case="*">已完结</em></span>
                             <span>总点击：<em class="black3" id="cTotal" th:text="${book.visitCount}"></em></span>
                             <span>总字数：<em class="black3" th:text="${book.wordCount}"></em></span>
+                            <span>合约地址：<a th:href="'/blockchain/blockchain.html?c='+${book.blockchainAddress}" th:text="${book.blockchainAddress}"></a></span>
+                            <span>通证总量：<em class="black3" th:text="1000000"></em></span>
+                            <span>所有者数量：<em class="black3" th:text=${book.visitCount}"></em></span>
                         </li>
                     </ul>
                 </div>

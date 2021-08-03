@@ -74,7 +74,8 @@ public class UserServiceImpl implements UserService {
         }
         User entity = new User();
         BeanUtils.copyProperties(user,entity);
-        //数据库生成注册记录
+        //数据库生成注册记录，
+        //TODO 增加钱包地址的生成
         Long id = new IdWorker().nextId();
         entity.setId(id);
         entity.setNickName(entity.getUsername());

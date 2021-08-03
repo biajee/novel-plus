@@ -17,6 +17,8 @@ github分支develop_blockchain,
 
 增加新的API使用
 
+增加新的service
+
 
 #### 新项目：小说精品屋-微服务版
 
@@ -87,8 +89,9 @@ novel-plus -- 父工程
 | Docker               | 应用容器引擎   
 | Mysql                | 数据库服务   
 | Thymeleaf            | 模板引擎     
-| Layui                | 前端UI                    
-                 
+| Layui                | 前端UI      
+| Web3j                | 区块链接口工具
+
 
 #### 开发工具
 感谢Jetbrains公司提供的免费License。

@@ -20,6 +20,9 @@ public final class BookAuthorDynamicSqlSupport {
     public static final SqlColumn<String> penName = bookAuthor.penName;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public static final SqlColumn<String> blockchainAddress = bookAuthor.blockchainAddress;
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final SqlColumn<String> telPhone = bookAuthor.telPhone;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
@@ -53,6 +56,8 @@ public final class BookAuthorDynamicSqlSupport {
         public final SqlColumn<String> inviteCode = column("invite_code", JDBCType.VARCHAR);
 
         public final SqlColumn<String> penName = column("pen_name", JDBCType.VARCHAR);
+
+        public final SqlColumn<String> blockchainAddress = column("blockchain_address", JDBCType.VARCHAR);
 
         public final SqlColumn<String> telPhone = column("tel_phone", JDBCType.VARCHAR);
 
