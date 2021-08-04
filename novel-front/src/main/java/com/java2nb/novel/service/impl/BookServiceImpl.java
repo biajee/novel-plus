@@ -168,19 +168,29 @@ public class BookServiceImpl implements BookService {
 
             return result;
         }catch(Exception e){
-            log.debug("获取book错误:"+e);
+            log.debug("获取listClickRank book错误:"+e);
         }
 
-        return null;
+        result = Collections.<Book>emptyList();
+
+        return result;
     }
 
     @Override
     public List<Book> listNewRank() {
-        List<Book> result = (List<Book>) cacheService.getObject(CacheKey.INDEX_NEW_BOOK_KEY);
-        if (result == null || result.size() == 0) {
-            result = listRank((byte) 1, 10);
-            cacheService.setObject(CacheKey.INDEX_NEW_BOOK_KEY, result, 3600);
+        try {
+            List<Book> result = (List<Book>) cacheService.getObject(CacheKey.INDEX_NEW_BOOK_KEY);
+            if (result == null || result.size() == 0) {
+                result = listRank((byte) 1, 10);
+                cacheService.setObject(CacheKey.INDEX_NEW_BOOK_KEY, result, 3600);
+            }
+            return result;
+        }catch(Exception e){
+            log.debug("获取listNewRank book错误:"+e);
         }
+
+        result = Collections.<Book>emptyList();
+
         return result;
     }
 
