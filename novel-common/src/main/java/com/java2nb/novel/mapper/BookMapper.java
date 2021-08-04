@@ -37,7 +37,7 @@ import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 @Mapper
 public interface BookMapper {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    BasicColumn[] selectList = BasicColumn.columnList(id, workDirection, catId, catName, picUrl, bookName,blockchainAddress, authorId, authorName, authorAddress, bookDesc, score, bookStatus, visitCount, wordCount, commentCount, yesterdayBuy, lastIndexId, lastIndexName, lastIndexUpdateTime, isVip, status, updateTime, createTime, crawlSourceId, crawlBookId, crawlLastTime, crawlIsStop);
+    BasicColumn[] selectList = BasicColumn.columnList(id, workDirection, catId, catName, picUrl, bookName, blockchainAddress, blockchainTokenId, blockchainTokenSupply, authorId, authorName, authorAddress, bookDesc, score, bookStatus, visitCount, wordCount, commentCount, yesterdayBuy, lastIndexId, lastIndexName, lastIndexUpdateTime, isVip, status, updateTime, createTime, crawlSourceId, crawlBookId, crawlLastTime, crawlIsStop);
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     @SelectProvider(type = SqlProviderAdapter.class, method = "select")
@@ -70,6 +70,8 @@ public interface BookMapper {
             @Result(column = "pic_url", property = "picUrl", jdbcType = JdbcType.VARCHAR),
             @Result(column = "book_name", property = "bookName", jdbcType = JdbcType.VARCHAR),
             @Result(column = "blockchain_address", property = "blockchainAddress", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "blockchain_token_id", property = "blockchainTokenId", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "blockchain_token_supply", property = "blockchainTokenSupply", jdbcType = JdbcType.BIGINT),
             @Result(column = "author_id", property = "authorId", jdbcType = JdbcType.BIGINT),
             @Result(column = "author_name", property = "authorName", jdbcType = JdbcType.VARCHAR),
             @Result(column = "author_address", property = "authorAddress", jdbcType = JdbcType.VARCHAR),
@@ -125,6 +127,8 @@ public interface BookMapper {
                         .map(picUrl).toProperty("picUrl")
                         .map(bookName).toProperty("bookName")
                         .map(blockchainAddress).toProperty("blockchainAddress")
+                        .map(blockchainTokenId).toProperty("blockchainTokenId")
+                        .map(blockchainTokenSupply).toProperty("blockchainTokenSupply")
                         .map(authorId).toProperty("authorId")
                         .map(authorName).toProperty("authorName")
                         .map(authorAddress).toProperty("authorAddress")
@@ -159,6 +163,8 @@ public interface BookMapper {
                         .map(picUrl).toProperty("picUrl")
                         .map(bookName).toProperty("bookName")
                         .map(blockchainAddress).toProperty("blockchainAddress")
+                        .map(blockchainTokenId).toProperty("blockchainTokenId")
+                        .map(blockchainTokenSupply).toProperty("blockchainTokenSupply")
                         .map(authorId).toProperty("authorId")
                         .map(authorName).toProperty("authorName")
                         .map(authorAddress).toProperty("authorAddress")
@@ -193,6 +199,8 @@ public interface BookMapper {
                         .map(picUrl).toPropertyWhenPresent("picUrl", record::getPicUrl)
                         .map(bookName).toPropertyWhenPresent("bookName", record::getBookName)
                         .map(blockchainAddress).toPropertyWhenPresent("blockchainAddress", record::getBlockchainAddress)
+                        .map(blockchainTokenId).toPropertyWhenPresent("blockchainTokenId", record::getBlockchainTokenId)
+                        .map(blockchainTokenSupply).toPropertyWhenPresent("blockchainTokenSupply", record::getBlockchainTokenSupply)
                         .map(authorId).toPropertyWhenPresent("authorId", record::getAuthorId)
                         .map(authorName).toPropertyWhenPresent("authorName", record::getAuthorName)
                         .map(authorAddress).toPropertyWhenPresent("authorAddress", record::getAuthorAddress)
@@ -253,6 +261,8 @@ public interface BookMapper {
                 .set(picUrl).equalTo(record::getPicUrl)
                 .set(bookName).equalTo(record::getBookName)
                 .set(blockchainAddress).equalTo(record::getBlockchainAddress)
+                .set(blockchainTokenId).equalTo(record::getBlockchainTokenId)
+                .set(blockchainTokenSupply).equalTo(record::getBlockchainTokenSupply)
                 .set(authorId).equalTo(record::getAuthorId)
                 .set(authorName).equalTo(record::getAuthorName)
                 .set(authorAddress).equalTo(record::getAuthorAddress)
@@ -285,6 +295,8 @@ public interface BookMapper {
                 .set(picUrl).equalToWhenPresent(record::getPicUrl)
                 .set(bookName).equalToWhenPresent(record::getBookName)
                 .set(blockchainAddress).equalToWhenPresent(record::getBlockchainAddress)
+                .set(blockchainTokenId).equalToWhenPresent(record::getBlockchainTokenId)
+                .set(blockchainTokenSupply).equalToWhenPresent(record::getBlockchainTokenSupply)
                 .set(authorId).equalToWhenPresent(record::getAuthorId)
                 .set(authorName).equalToWhenPresent(record::getAuthorName)
                 .set(authorAddress).equalToWhenPresent(record::getAuthorAddress)
@@ -317,6 +329,8 @@ public interface BookMapper {
                         .set(picUrl).equalTo(record::getPicUrl)
                         .set(bookName).equalTo(record::getBookName)
                         .set(blockchainAddress).equalTo(record::getBlockchainAddress)
+                        .set(blockchainTokenId).equalTo(record::getBlockchainTokenId)
+                        .set(blockchainTokenSupply).equalTo(record::getBlockchainTokenSupply)
                         .set(authorId).equalTo(record::getAuthorId)
                         .set(authorName).equalTo(record::getAuthorName)
                         .set(authorAddress).equalTo(record::getAuthorAddress)
@@ -351,6 +365,8 @@ public interface BookMapper {
                         .set(picUrl).equalToWhenPresent(record::getPicUrl)
                         .set(bookName).equalToWhenPresent(record::getBookName)
                         .set(blockchainAddress).equalToWhenPresent(record::getBlockchainAddress)
+                        .set(blockchainTokenId).equalToWhenPresent(record::getBlockchainTokenId)
+                        .set(blockchainTokenSupply).equalToWhenPresent(record::getBlockchainTokenSupply)
                         .set(authorId).equalToWhenPresent(record::getAuthorId)
                         .set(authorName).equalToWhenPresent(record::getAuthorName)
                         .set(authorAddress).equalToWhenPresent(record::getAuthorAddress)

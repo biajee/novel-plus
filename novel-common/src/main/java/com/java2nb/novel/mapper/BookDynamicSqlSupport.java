@@ -32,6 +32,12 @@ public final class BookDynamicSqlSupport {
     public static final SqlColumn<String> blockchainAddress = book.blockchainAddress;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public static final SqlColumn<String> blockchainTokenId = book.blockchainTokenId;
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    public static final SqlColumn<Long> blockchainTokenSupply = book.blockchainTokenSupply;
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final SqlColumn<Long> authorId = book.authorId;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")

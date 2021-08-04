@@ -515,6 +515,21 @@ public class BookServiceImpl implements BookService {
 
     }
 
+    public String generateTokenId() {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+          .limit(targetStringLength)
+          .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+          .toString();
+
+        return generatedString;
+    }
+
     @Override
     public void addBook(Book book, Long authorId, String penName) {
         //判断小说名是否存在
@@ -532,6 +547,10 @@ public class BookServiceImpl implements BookService {
         book.setLastIndexName("");
         book.setCreateTime(new Date());
         book.setUpdateTime(book.getCreateTime());
+        book.setBlockchainAddress(new Date().toString());
+        book.setBlockchainTokenId(generateTokenId());
+        Long tokenSupply = 50000000000;
+        book.setBlockchainTokenSupply(tokenSupply);
         bookMapper.insertSelective(book);
 
     }
