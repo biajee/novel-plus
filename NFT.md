@@ -40,6 +40,7 @@ test123
 mysqladmin -u root -p create novel_blockchain
 mysqldump -u root -v books -p | mysql -u root -p -D novel_blockchain
 
+mysqladmin -u root -p drop novel_blockchain
 mysqladmin -u root -p create novel_blockchain
 mysql -u root -p novel_blockchain < /home/ubuntu/novel/novel-plus/doc/sql/novel_blockchain.sql
 

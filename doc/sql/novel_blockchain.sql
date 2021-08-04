@@ -1568,7 +1568,7 @@ CREATE TABLE `user_buy_record` (
   `book_index_id` bigint(20) DEFAULT NULL COMMENT '购买的章节ID',
   `book_index_name` varchar(100) DEFAULT NULL COMMENT '购买的章节名',
   `buy_amount` int(11) DEFAULT NULL COMMENT '购买使用的币数量',
-  `book_blockchain_address` int(11) DEFAULT NULL COMMENT '购买获得的作品通证数量',
+  `book_blockchain_address` varchar(42) DEFAULT NULL COMMENT '购买获得的作品通证数量',
   `book_token_amount` int(11) DEFAULT NULL COMMENT '购买获得的作品通证数量',
   `create_time` datetime DEFAULT NULL COMMENT '购买时间',
   PRIMARY KEY (`id`),
