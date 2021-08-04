@@ -171,7 +171,7 @@ public class BookServiceImpl implements BookService {
             log.debug("获取listClickRank book错误:"+e);
         }
 
-        result = Collections.<Book>emptyList();
+        List<Book> result = Collections.<Book>emptyList();
 
         return result;
     }
@@ -189,7 +189,7 @@ public class BookServiceImpl implements BookService {
             log.debug("获取listNewRank book错误:"+e);
         }
 
-        result = Collections.<Book>emptyList();
+        List<Book> result = Collections.<Book>emptyList();
 
         return result;
     }
