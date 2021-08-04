@@ -116,6 +116,10 @@ public final class BookDynamicSqlSupport {
 
         public final SqlColumn<String> blockchainAddress = column("blockchain_address", JDBCType.VARCHAR);
 
+        public final SqlColumn<String> blockchainTokenId = column("blockchain_token_id", JDBCType.VARCHAR);
+
+        public final SqlColumn<Long> blockchainTokenSupply = column("blockchain_token_supply", JDBCType.BIGINT);
+
         public final SqlColumn<Long> authorId = column("author_id", JDBCType.BIGINT);
 
         public final SqlColumn<String> authorName = column("author_name", JDBCType.VARCHAR);
