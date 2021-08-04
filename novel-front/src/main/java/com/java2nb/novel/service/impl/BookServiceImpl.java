@@ -197,12 +197,19 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookVO> listUpdateRank() {
-        List<BookVO> result = (List<BookVO>) cacheService.getObject(CacheKey.INDEX_UPDATE_BOOK_KEY);
-        if (result == null || result.size() == 0) {
-            List<Book> bookPOList = listRank((byte) 2, 23);
-            result = BeanUtil.copyList(bookPOList, BookVO.class);
-            cacheService.setObject(CacheKey.INDEX_UPDATE_BOOK_KEY, result, 60 * 10);
+        try {
+            List<BookVO> result = (List<BookVO>) cacheService.getObject(CacheKey.INDEX_UPDATE_BOOK_KEY);
+            if (result == null || result.size() == 0) {
+                List<Book> bookPOList = listRank((byte) 2, 23);
+                result = BeanUtil.copyList(bookPOList, BookVO.class);
+                cacheService.setObject(CacheKey.INDEX_UPDATE_BOOK_KEY, result, 60 * 10);
+            }
+        }catch(Exception e){
+            log.debug("获取listUpdateRank book错误:"+e);
         }
+
+        List<Book> result = Collections.<Book>emptyList();
+
         return result;
     }
 
