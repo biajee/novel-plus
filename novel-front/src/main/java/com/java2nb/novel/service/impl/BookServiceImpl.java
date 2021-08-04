@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Random;
+import java.util.Collections;
 
 import static com.java2nb.novel.mapper.BookCategoryDynamicSqlSupport.bookCategory;
 import static com.java2nb.novel.mapper.BookCommentDynamicSqlSupport.bookComment;
