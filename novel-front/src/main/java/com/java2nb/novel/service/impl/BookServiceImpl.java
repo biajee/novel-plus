@@ -549,7 +549,7 @@ public class BookServiceImpl implements BookService {
         book.setUpdateTime(book.getCreateTime());
         book.setBlockchainAddress(new Date().toString());
         book.setBlockchainTokenId(generateTokenId());
-        Long tokenSupply = 50000000000;
+        Long tokenSupply = 50000000000L;
         book.setBlockchainTokenSupply(tokenSupply);
         bookMapper.insertSelective(book);
 
