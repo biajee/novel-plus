@@ -44,7 +44,7 @@ CREATE TABLE `author` (
 -- Records of author
 -- ----------------------------
 INSERT INTO `author` VALUES ('1', null, '0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b','邀请码1','abc', '13560487656', '23484388', '23484388@qq.com', '0', '0', null);
-INSERT INTO `author` VALUES ('2', '用户ID1','0xd814f2ac2c4ca49b33066582e4e97ebae02f2ab9', 'rwrr445554', '梦入神机', '13560421324', '1179705413', 'reerer@qq.com', '0', '0', '2020-05-13 14:01:31');
+INSERT INTO `author` VALUES ('2', null,'0xd814f2ac2c4ca49b33066582e4e97ebae02f2ab9', 'rwrr445554', '梦入神机', '13560421324', '1179705413', 'reerer@qq.com', '0', '0', '2020-05-13 14:01:31');
 
 -- ----------------------------
 -- Table structure for author_code
