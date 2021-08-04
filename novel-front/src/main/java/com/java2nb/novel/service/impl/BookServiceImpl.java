@@ -208,7 +208,7 @@ public class BookServiceImpl implements BookService {
             log.debug("获取listUpdateRank book错误:"+e);
         }
 
-        List<Book> result = Collections.<Book>emptyList();
+        List<BookVO> result = Collections.<BookVO>emptyList();
 
         return result;
     }
