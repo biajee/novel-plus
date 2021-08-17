@@ -5,8 +5,10 @@ $ cd ~/novel/novel-plus/
 $ mvn package
 
 main webstie
-$ cd ~/novel/novel-plus/novel-front/target
-$ setsid java -jar novel-front-3.5.4.jar
+
+cd ~/novel/novel-plus/novel-front/target
+setsid java -jar novel-front-3.5.4.jar
+
 Then, goto http://localhost:8080
 
 crawler
