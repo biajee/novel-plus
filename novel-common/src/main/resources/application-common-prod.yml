@@ -40,7 +40,7 @@ sharding:
       ds0:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://localhost:3306/novel_blockchain?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+        jdbc-url: jdbc:mysql://44.233.171.170:3306/novel_blockchain?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
         username: bookadmin
         password: "test314@test314"
     #      ds1:

@@ -8,7 +8,7 @@
             <property name="suppressAllComments" value="true" />
         </commentGenerator>
         <jdbcConnection
-                connectionURL="jdbc:mysql://127.0.0.1:3306/novel_blockchain?tinyInt1isBit=false&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=Asia/Shanghai&amp;nullCatalogMeansCurrent=true"
+                connectionURL="jdbc:mysql://44.233.171.170:3306/novel_blockchain?tinyInt1isBit=false&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=Asia/Shanghai&amp;nullCatalogMeansCurrent=true"
                 driverClass="com.mysql.jdbc.Driver" password="test314@test314"
                 userId="bookadmin" />
 
