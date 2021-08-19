@@ -8,8 +8,8 @@
             <property name="suppressAllComments" value="true" />
         </commentGenerator>
         <jdbcConnection
-                connectionURL="jdbc:mysql://44.233.171.170:3306/novel_blockchain?tinyInt1isBit=false&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=Asia/Shanghai&amp;nullCatalogMeansCurrent=true"
-                driverClass="com.mysql.jdbc.Driver" password="test314@test314"
+                connectionURL="jdbc:mysql://34.217.90.193:3306/novel_blockchain?tinyInt1isBit=false&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=Asia/Shanghai&amp;nullCatalogMeansCurrent=true"
+                driverClass="com.mysql.jdbc.Driver" password="Test314@Test314"
                 userId="bookadmin" />
 
         <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer， 为 true时把JDBC DECIMAL
