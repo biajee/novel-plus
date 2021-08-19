@@ -29,16 +29,10 @@ public final class BookDynamicSqlSupport {
     public static final SqlColumn<String> bookName = book.bookName;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public static final SqlColumn<String> blockchainAddress = book.blockchainAddress;
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final SqlColumn<Long> authorId = book.authorId;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final SqlColumn<String> authorName = book.authorName;
-
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public static final SqlColumn<String> authorAddress = book.authorAddress;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public static final SqlColumn<String> bookDesc = book.bookDesc;
@@ -108,13 +102,13 @@ public final class BookDynamicSqlSupport {
 
         public final SqlColumn<String> bookName = column("book_name", JDBCType.VARCHAR);
 
-        public final SqlColumn<String> blockchainAddress = column("blockchain_address", JDBCType.VARCHAR);
+//        public final SqlColumn<String> blockchainAddress = column("blockchain_address", JDBCType.VARCHAR);
 
         public final SqlColumn<Long> authorId = column("author_id", JDBCType.BIGINT);
 
         public final SqlColumn<String> authorName = column("author_name", JDBCType.VARCHAR);
 
-        public final SqlColumn<String> authorAddress = column("author_address", JDBCType.VARCHAR);
+//        public final SqlColumn<String> authorAddress = column("author_address", JDBCType.VARCHAR);
 
         public final SqlColumn<String> bookDesc = column("book_desc", JDBCType.VARCHAR);
 

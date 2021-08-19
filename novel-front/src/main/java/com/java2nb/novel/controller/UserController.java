@@ -9,6 +9,7 @@ import com.java2nb.novel.core.valid.AddGroup;
 import com.java2nb.novel.core.valid.UpdateGroup;
 import com.java2nb.novel.entity.User;
 import com.java2nb.novel.entity.UserBuyRecord;
+import com.java2nb.novel.service.BlockchainService;
 import com.java2nb.novel.service.BookService;
 import com.java2nb.novel.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class UserController extends BaseController {
 
     private final BookService bookService;
 
+    private final BlockchainService blockchainService;
     /**
      * 登陆
      */
@@ -283,5 +285,31 @@ public class UserController extends BaseController {
             return ResultBean.fail(ResponseStatus.NO_LOGIN);
         }
         return ResultBean.ok(userService.listTokenBalanceByPage(userDetails.getId(),page,pageSize));
+    }
+
+    /**
+     * 查询区块链最新区块高度
+     * */
+    @GetMapping("listBlockchainHeight")
+    public ResultBean listBlockchainHeight(){
+        return ResultBean.ok(blockchainService.getBlockNumber());
+    }
+
+    /**
+     * 查询用户区块链账户的余额
+     * */
+    @GetMapping("getAccountBalance")
+    public ResultBean getAccountBalance(String accountAddress){
+        return ResultBean.ok(blockchainService.getAccountBalance(accountAddress));
+    }
+
+    /**
+     * 查询用户区块链账户通证的余额
+     * tokenAddress: 作品合约的地址
+     * accountAddress: 用户区块链账户地址
+     * */
+    @GetMapping("getTokenBalance")
+    public ResultBean getTokenBalance(String tokenAddress, String accountAddress){
+        return ResultBean.ok(blockchainService.getTokenBalance(tokenAddress, accountAddress));
     }
 }

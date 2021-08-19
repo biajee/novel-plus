@@ -23,7 +23,7 @@
                                 书名
                             </th>
                             <th class="token_balance">
-                                通证余额
+                                通证数量
                             </th>
                             <th class="token_address">
                                 通证地址
@@ -32,7 +32,7 @@
                                 更新时间
                             </th>
                             <th class="token_details">
-                                详情
+                                通证收入
                             </th>
                         </tr>
                         </thead>
@@ -52,6 +52,7 @@
 </div>
 <div th:replace="common/js :: js"></div>
 <script src="/javascript/user.js" type="text/javascript"></script>
+<script src="/javascript/date.js" type="text/javascript"></script>
 <script type="text/javascript">
     search(1, 10);
 
@@ -75,16 +76,16 @@
                                 "                            </td>\n" +
                                 "                            <td class=\"token_balance\">\n" +
                                 "                                <a href=\"/book/"+token.tokenBalance+".html\">\n" +
-                                "                                    "+token.tokenBalance+"</a>\n" +
+                                "                            "+token.tokenBalance+"</a>\n" +
                                 "                            </td>\n" +
                                 "                            <td class=\"token_address\" valsc=\"291|2037554|1\">\n" +
                                 "<a href='/token/"+token.bookId+"/"+token.blockchainAddress+".html'>"+token.blockchainAddress+"</a>"+
                                 "                            </td>\n" +
                                 "                            <td class=\"time\">\n" +
-                                "                                "+token.updateTime+"\n" +
+                                "                            "+new Date(Date.parse(token.updateTime)).Format("yyyy-MM-dd hh:mm")+"\n" +
                                 "                            </td>\n" +
                                 "                            <td class=\"token_details\">\n" +
-                                "<a href='/token/"+token.bookId+"/"+token.blockchainAddress+".html'>通证详情</a>"+
+                                "<a href='/token/"+token.bookId+"/"+token.blockchainAddress+".html'>通证收入</a>"+
                                 "                            </td>\n" +
                                 "                        </tr>");
                         }
@@ -101,11 +102,9 @@
                                 , limit: data.data.pageSize
                                 , jump: function (obj, first) {
 
-
                                     //obj包含了当前分页的所有参数，比如：
                                     console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
                                     console.log(obj.limit); //得到每页显示的条数
-
 
                                     //首次不执行
                                     if (!first) {

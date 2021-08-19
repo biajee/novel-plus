@@ -19,8 +19,7 @@ public class NewsController {
 
     private final NewsService newsService;
 
-//    @Autowired
-//    private final BlockchainService blockchainService;
+    private final BlockchainService blockchainService;
 
     /**
      * 查询首页新闻
@@ -41,10 +40,10 @@ public class NewsController {
     /**
      * 查询区块链最新区块高度
      * */
-//    @GetMapping("listBlockchainHeight")
-//    public ResultBean listBlockchainHeight(){
-//        return ResultBean.ok(blockchainService.getBlockNumber());
-//    }
+    @GetMapping("listBlockchainHeight")
+    public ResultBean listBlockchainHeight(){
+        return ResultBean.ok(blockchainService.getBlockNumber());
+    }
 
 
 }

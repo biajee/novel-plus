@@ -5,7 +5,7 @@
 
     <select id="searchByPage" parameterType="com.java2nb.novel.vo.BookSpVO" resultType="com.java2nb.novel.vo.BookVO">
         select
-        id,cat_id,cat_name,book_name,blockchain_address,author_id,author_name,author_address,word_count,last_index_id,last_index_name,score,pic_url,book_status,last_index_update_time,book_desc
+        id,cat_id,cat_name,book_name,author_id,author_name,word_count,last_index_id,last_index_name,score,pic_url,book_status,last_index_update_time,book_desc
         from book where word_count > 0
         <if test="keyword != null and keyword != ''">
             and (book_name like concat('%',#{keyword},'%') or author_name like concat('%',#{keyword},'%'))

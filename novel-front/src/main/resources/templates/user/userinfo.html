@@ -31,9 +31,9 @@
                         </p>
                     <ul class="my_list">
                         <li class="my_blockchain_address"><i>区块链地址：</i><em class="red" id="blockchain_address"></em></li>
-                        <li class="my_blockchain_height"><i>区块链高度：</i><em class="red" id="blockchain_height"></em></li>
+                        <li class="my_blockchain_height"><i>区块链高度：</i><em class="red" id="blockchain_height"></em><a class="btn_link" href="javascript:getBlockchainHeight()" >更新</a></li>
                         <li class="my_gold"><i>账户余额：</i><em class="red" id="accountBalance">0</em>通证<!--<em class="red">+</em><em class="red">0</em>代金券--><a href="/pay/index.html" class="btn_link">立即充值</a></li>
-                        <li class="my_baonian"></li>
+                        <li class="my_gold"><i>链上余额：</i><em class="red" id="accountBalanceOnChain">0</em><a class="btn_link" href="javascript:getAccountBalance()" >更新</a></li>
 
                     </ul>
                 </div>
@@ -161,7 +161,61 @@
         }
     })
 
+    // Access the blockchain to get the highest block
+    // test purpose, set the news in the news_controller
+    function getBlockchainHeight(){
+        $.ajax({
+            type: "GET",
+            url: "/news/listBlockchainHeight",
+            dataType: "json",
+            success: function (data) {
+                if (data.code == 200) {
+                  $("#blockchain_height").html(data.data);
+console.log("data.data:", data.data);
 
+                } else if(data.code == 1001){
+                    //未登录
+                    location.href = '/user/login.html?originUrl='+decodeURIComponent(location.href);
+
+                }else {
+                    layer.alert(data.msg);
+                }
+
+            },
+            error: function () {
+                layer.alert('网络异常');
+            }
+        })
+
+    }
+
+    // 使用web3j直接对接区块链后台，显示用户原生通证余额
+    function getAccountBalance(){
+        $.ajax({
+            type: "GET",
+            url: "/user/getAccountBalance",
+            data: {'accountAddress':"0x22c139608d92ec8017aab057b06d0abafe53da98"},
+            dataType: "json",
+            success: function (data) {
+                if (data.code == 200) {
+                  $("#accountBalanceOnChain").html(data.data);
+console.log("data.data:", data.data);
+
+                } else if(data.code == 1001){
+                    //未登录
+                    location.href = '/user/login.html?originUrl='+decodeURIComponent(location.href);
+
+                }else {
+                    layer.alert(data.msg);
+                }
+
+            },
+            error: function () {
+                layer.alert('网络异常');
+            }
+        })
+
+    }
 </script>
 </body>
 </html>

@@ -302,6 +302,8 @@ public class UserServiceImpl implements UserService {
                 .where(id,isEqualTo(userId))
                 .build()
                 .render(RenderingStrategies.MYBATIS3));
+
+        // 根据用户的权益通证数量，增加收入
     }
 
     @Override

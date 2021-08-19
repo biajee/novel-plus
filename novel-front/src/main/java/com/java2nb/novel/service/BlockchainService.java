@@ -22,6 +22,12 @@ public interface BlockchainService {
     String createNewAccount(String password);
 
     /**
+     * 查询原生通证余额功能
+     * @return 返回输入通证的最新余额
+     * */
+    BigInteger getAccountBalance(String accountAddress);
+
+    /**
      * 账号解锁
      * @return 返回成功与否
      * */
@@ -34,6 +40,18 @@ public interface BlockchainService {
      * @return 创建的合约地址
      * */
     String createBookTokenContract(String fromUserAddress);
+
+    /**
+     * 查询通证余额功能
+     * @return 返回输入通证的最新余额
+     * */
+    BigInteger getTokenBalance(String tokenAddress, String accountAddress);
+
+    /**
+     * 查询通证名称功能
+     * @return 返回输入通证的名称
+     * */
+    String getTokenName(String tokenAddress);
 
 
     /**

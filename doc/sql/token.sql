@@ -4,43 +4,41 @@ Navicat MySQL Data Transfer
 Source Server         : localhost
 Source Server Version : 50624
 Source Host           : localhost:3306
-Source Database       : novel_plus
+Source Database       : novel_blockchain
 
 Target Server Type    : MYSQL
 Target Server Version : 50624
 File Encoding         : 65001
 
-Date: 2020-05-13 21:42:20
+Date: 2021-08-07 21:42:20
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for author
+-- Table structure for token_details
+-- 用于作品的通证存储，根据区块链浏览器的内容设计
 -- ----------------------------
-DROP TABLE IF EXISTS `author`;
-CREATE TABLE `author` (
+DROP TABLE IF EXISTS `token_details`;
+CREATE TABLE `token_details` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `user_id` bigint(20) DEFAULT NULL COMMENT '用户ID',
-  `invite_code` varchar(20) DEFAULT NULL COMMENT '邀请码',
-  `pen_name` varchar(20) DEFAULT NULL COMMENT '笔名',
-  `tel_phone` varchar(20) DEFAULT NULL COMMENT '手机号码',
-  `chat_account` varchar(50) DEFAULT NULL COMMENT 'QQ或微信账号',
-  `email` varchar(50) DEFAULT NULL COMMENT '电子邮箱',
-  `work_direction` tinyint(4) DEFAULT NULL COMMENT '作品方向，0：男频，1：女频',
-  `status` tinyint(4) DEFAULT '0' COMMENT '0：正常，1：封禁',
+  `token_name` bigint(20) DEFAULT NULL COMMENT '通证名称',
+  `token_address` varchar(42) DEFAULT NULL COMMENT '邀请码',
+  `total_supply` bigint(20) DEFAULT NULL COMMENT '通证总量',
+  `token_creator` varchar(42) DEFAULT NULL COMMENT '通证的拥有者或者管理者',
+  `decimals` tinyint(4) DEFAULT '16' COMMENT '通证小数位置，默认使用以太坊的1e-16',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='作者表';
 
 -- ----------------------------
--- Records of author
+-- Records of 通证
 -- ----------------------------
-INSERT INTO `author` VALUES ('1', null, 'reerer', 'abc', '13560487656', '23484388', '23484388@qq.com', '0', '0', null);
-INSERT INTO `author` VALUES ('2', '1255060328322027520', 'rwrr445554', '梦入神机', '13560421324', '1179705413', 'reerer@qq.com', '0', '0', '2020-05-13 14:01:31');
+INSERT INTO `token_details` VALUES ('1', null, 'reerer', 'abc', '13560487656', '23484388', '23484388@qq.com', '0', '0', null);
+INSERT INTO `token_details` VALUES ('2', '另一种历史', 'rwrr445554', '梦入神机', '13560421324', '1179705413', 'reerer@qq.com', '0', '0', '2020-05-13 14:01:31');
 
 -- ----------------------------
--- Table structure for author_code
+-- Table structure for token_list
 -- ----------------------------
 DROP TABLE IF EXISTS `author_code`;
 CREATE TABLE `author_code` (

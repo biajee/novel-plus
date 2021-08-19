@@ -153,8 +153,88 @@ public class PayController extends BaseController {
 
     }
 
+    /**
+     * 区块链支付
+     * TODO: 需调用区块链API完成
+     */
+    @SneakyThrows
+    @PostMapping("blockchainPay")
+    public void blockchainPay(Integer payAmount,HttpServletRequest request,HttpServletResponse httpResponse) {
+
+        UserDetails userDetails = getUserDetails(request);
+        if (userDetails == null) {
+            //未登录，跳转到登陆页面
+            httpResponse.sendRedirect("/user/login.html?originUrl=/pay/aliPay?payAmount="+payAmount);
+            return;
+        }else {
+            //创建充值订单
+            Long outTradeNo = orderService.createPayOrder((byte)1,payAmount,userDetails.getId());
+
+            httpResponse.sendRedirect("/pay/blockchainPay/notify?out_trade_no="+outTradeNo);
 
 
+             httpResponse.setContentType("text/html;charset=utf-8");
+             //直接将完整的表单html输出到页面
+             httpResponse.getWriter().write("Done!"+payAmount);
+             httpResponse.getWriter().flush();
+             httpResponse.getWriter().close();
+        }
+
+    }
+
+    /**
+     * 区块链支付通知
+     * TODO 需异步等待并返回结果
+     * */
+    @SneakyThrows
+    @RequestMapping("blockchainPay/notify")
+    public void blockchainPayNotify(HttpServletRequest request,HttpServletResponse httpResponse){
+
+
+        PrintWriter out = httpResponse.getWriter();
+        boolean signVerified = true;
+
+        //——请在这里编写您的程序（以下代码仅作参考）——
+
+	/* 实际验证过程建议商户务必添加以下校验：
+	1、需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号，
+	2、判断total_amount是否确实为该订单的实际金额（即商户订单创建时的金额），
+	3、校验通知中的seller_id（或者seller_email) 是否为out_trade_no这笔单据的对应的操作方（有的时候，一个商户可能有多个seller_id/seller_email）
+	4、验证app_id是否为该商户本身。
+	*/
+        if(signVerified) {
+            //验证成功
+            //商户订单号
+            String outTradeNo = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"),"UTF-8");
+
+            //支付宝交易号
+            // String tradeNo = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"),"UTF-8");
+            String tradeNo = "123457890";
+
+            //交易状态
+            // String tradeStatus = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
+            String tradeStatus = "TRADE_SUCCESS";
+
+            //更新订单状态
+            orderService.updatePayOrder(Long.parseLong(outTradeNo), tradeNo, tradeStatus);
+
+
+            out.println("success");
+
+            httpResponse.sendRedirect("/pay");
+
+
+        }else {//验证失败
+            out.println("fail");
+
+            //调试用，写文本函数记录程序运行情况是否正常
+            //String sWord = AlipaySignature.getSignCheckContentV1(params);
+            //AlipayConfig.logResult(sWord);
+        }
+
+
+
+    }
 
 
 
