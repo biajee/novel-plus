@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import org.web3j.crypto.*;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.http.HttpService;
@@ -18,7 +19,14 @@ import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.*;
 import org.web3j.abi.datatypes.generated.Uint256;
+import org.web3j.protocol.ObjectMapperFactory;
+import org.web3j.tx.ChainId;
+import org.web3j.utils.Numeric;
+import org.web3j.utils.Convert;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.math.BigDecimal;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -44,17 +52,21 @@ public class BlockchainServiceImpl implements BlockchainService {
 //    @Autowired
     private final Web3j web3j;
     private final Admin admin;
-    private static String emptyAddress = "0x0000000000000000000000000000000000000000";
+    private static final String emptyAddress = "0x0000000000000000000000000000000000000000";
+    private static final byte defaultBlockchainID = 101;
+    private static final int defaultGasPrice = 3;
+    private static final int defaultGasLimit = 1000;
 
-//    private Web3j web3j = Web3j.build(new HttpService("http://127.0.0.1:8545/"));
+    public static String RPC_URL = "http://127.0.0.1:8545/";
+    public static String TESTNET = "http://gateway.moac.io/testnet";
     //Mainnet:   http://web3.moac.moacchain.net
     //Testnet:   http://gateway.moac.io/testnet
     //Local node: http://localhost:8545
     public BlockchainServiceImpl() {
 
         //This service is running on the address passed as a parameter below
-        this.web3j = Web3j.build(new HttpService("http://gateway.moac.io/testnet"));
-        this.admin = Admin.build(new HttpService("http://gateway.moac.io/testnet"));
+        this.web3j = Web3j.build(new HttpService(TESTNET));
+        this.admin = Admin.build(new HttpService(TESTNET));
     }
 
     /**
@@ -119,6 +131,7 @@ public class BlockchainServiceImpl implements BlockchainService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        log.debug("查询通证："+tokenAddress+" 账户 " + accountAddress + " balance " + balanceValue + " decimal");
         return balanceValue;
     }
 
@@ -150,20 +163,36 @@ public class BlockchainServiceImpl implements BlockchainService {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+        log.debug("查询通证："+tokenAddress+" 名称 " + name);
         return name;
     }
 
     /**
      * Admin: 创建新账号
+     * 使用web3j本身的crypto来产生钱包文件
+     * TODO：研究一下安全问题
      */
     @Override
     public String createNewAccount(String password) {
+//        try {
+//            NewAccountIdentifier newAccountIdentifier = admin.personalNewAccount(password).send();
+//            String address = newAccountIdentifier.getAccountId();
+//            log.debug("生成new account address " + address);
+//            return address;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+        WalletFile walletFile;
         try {
-            NewAccountIdentifier newAccountIdentifier = admin.personalNewAccount(password).send();
-            String address = newAccountIdentifier.getAccountId();
-            System.out.println("new account address " + address);
-            return address;
-        } catch (IOException e) {
+            ECKeyPair ecKeyPair = Keys.createEcKeyPair();
+            walletFile = Wallet.createStandard(password, ecKeyPair);
+            log.debug("新钱包 address " + walletFile.getAddress());
+            ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();
+            String jsonStr = objectMapper.writeValueAsString(walletFile);
+            log.debug("keystore json file created");
+            return jsonStr;
+        }catch (Exception e){
             e.printStackTrace();
         }
         return null;
@@ -175,22 +204,102 @@ public class BlockchainServiceImpl implements BlockchainService {
         return fromUserAddress;
     }
 
+    /**
+     * 从用户地址转移指定数额的token到指定地址
+     *
+     * @param bookTokenAddress 通证合约地址
+     * @param fromUserAddress      拥有通证的用户地址
+     * @param toUserAddress 目标地址
+     * @param Amount 通证数量
+     * @param privateKey 发送账户的私钥
+     * @return 交易的HASH值
+     * */
     @Override
-    public String transferBookToken(String bookTokenAddress, String fromUserAddress, String toUserAddress, int Amount) {
-
-        if (Amount > 0) {
-
-            if (bookTokenAddress == fromUserAddress)
-                return fromUserAddress;
-            else
-                return toUserAddress;
-        }else{
-            return bookTokenAddress;
-        }
-
+    public String transferBookToken(String bookTokenAddress, String fromUserAddress, String toUserAddress, BigDecimal amount, String privateKey) {
+        return null;
 
     }
 
+    /**
+     * Admin: 发送原生币交易
+     * 使用钱包对象签名并发送原生币交易
+     */
+    @Override
+    public String sendSignedTransaction(String srcAddress, String toAddress, double amount, String privateKey) {
+        BigInteger nonce;
+        String txHash="";
+
+        EthGetTransactionCount ethGetTransactionCount = null;
+        try {
+            ethGetTransactionCount = web3j.ethGetTransactionCount(srcAddress, DefaultBlockParameterName.PENDING).send();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (ethGetTransactionCount == null) return null;
+        nonce = ethGetTransactionCount.getTransactionCount();
+        log.debug("srcAddress:"+srcAddress+" toAddress "+toAddress+" : "+amount+" nonce: "+nonce);
+        // Grab the connect chain's ID
+        // BigInteger blockchainId;
+//        try {
+//            blockchainId = web3j.EthChainId().send();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        // Use predefined chainID
+        String data = "";//Optional
+        byte chainId = defaultBlockchainID;//ChainId.ROPSTEN;//测试网络
+
+        BigInteger gasPrice = Convert.toWei(BigDecimal.valueOf(defaultGasPrice), Convert.Unit.GWEI).toBigInteger();
+        BigInteger gasLimit = BigInteger.valueOf(defaultGasLimit);
+
+        BigInteger value = Convert.toWei(BigDecimal.valueOf(amount), Convert.Unit.ETHER).toBigInteger();
+
+        String signedData;
+        try {
+            signedData = signTransaction(nonce, gasPrice, gasLimit, toAddress, value, data, chainId, privateKey);
+            if (signedData != null) {
+                log.debug("SignedData:"+signedData);
+                EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(signedData).send();
+                txHash = ethSendTransaction.getTransactionHash();
+                log.debug("TXhash:"+txHash);
+            }
+            return txHash;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 对输入交易使用私钥进行签名
+     */
+    public static String signTransaction(BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
+                                         BigInteger value, String data, byte chainId, String privateKey) throws IOException {
+        byte[] signedMessage;
+        RawTransaction rawTransaction = RawTransaction.createTransaction(
+                nonce,
+                gasPrice,
+                gasLimit,
+                to,
+                value,
+                data);
+
+        if (privateKey.startsWith("0x")) {
+            privateKey = privateKey.substring(2);
+        }
+        ECKeyPair ecKeyPair = ECKeyPair.create(new BigInteger(privateKey, 16));
+        Credentials credentials = Credentials.create(ecKeyPair);
+
+        if (chainId > ChainId.NONE) {
+            signedMessage = TransactionEncoder.signMessage(rawTransaction, chainId, credentials);
+        } else {
+            // Should not be used, need throw error
+            signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
+        }
+
+        String hexValue = Numeric.toHexString(signedMessage);
+        return hexValue;
+    }
 
     /**
      * 账号解锁

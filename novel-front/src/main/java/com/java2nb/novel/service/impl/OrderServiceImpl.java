@@ -71,11 +71,6 @@ public class OrderServiceImpl implements OrderService {
                 //2.增加用户余额
                 userService.addAmount(orderPay.getUserId(),orderPay.getTotalAmount()*100);
 
-
-
-
-
-
             }
         }
 

@@ -52,8 +52,6 @@ public class UserController extends BaseController {
         data.put("token", jwtTokenUtil.generateToken(userDetails));
 
         return ResultBean.ok(data);
-
-
     }
 
     /**
@@ -311,5 +309,21 @@ public class UserController extends BaseController {
     @GetMapping("getTokenBalance")
     public ResultBean getTokenBalance(String tokenAddress, String accountAddress){
         return ResultBean.ok(blockchainService.getTokenBalance(tokenAddress, accountAddress));
+    }
+
+    /**
+     * 使用原生币支付
+     * */
+    @PostMapping("payWithBlockchain")
+    public ResultBean addToBookShelf(String toAddress,double value, HttpServletRequest request) {
+        UserDetails userDetails = getUserDetails(request);
+        if (userDetails == null) {
+            return ResultBean.fail(ResponseStatus.NO_LOGIN);
+        }
+        String srcAddress="0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b";
+        String privateKey="0xc75a5f85ef779dcf95c651612efb3c3b9a6dfafb1bb5375905454d9fc8be8a6b";
+
+        blockchainService.sendSignedTransaction(srcAddress, toAddress, value*0.001, privateKey);
+        return ResultBean.ok();
     }
 }

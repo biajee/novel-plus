@@ -1568,7 +1568,7 @@ CREATE TABLE `user_buy_record` (
   `book_index_id` bigint(20) DEFAULT NULL COMMENT '购买的章节ID',
   `book_index_name` varchar(100) DEFAULT NULL COMMENT '购买的章节名',
   `buy_amount` int(11) DEFAULT NULL COMMENT '购买使用的币数量',
-  `book_blockchain_address` varchar(42) DEFAULT NULL COMMENT '购买获得的作品通证数量',
+  `book_blockchain_address` varchar(42) DEFAULT NULL COMMENT '购买获得的作品通证合约',
   `book_token_amount` int(11) DEFAULT NULL COMMENT '购买获得的作品通证数量',
   `create_time` datetime DEFAULT NULL COMMENT '购买时间',
   PRIMARY KEY (`id`),
@@ -1578,8 +1578,8 @@ CREATE TABLE `user_buy_record` (
 -- ----------------------------
 -- Records of user_buy_record
 -- ----------------------------
-INSERT INTO `user_buy_record` VALUES ('1', '1255060328322027520', '1260400284744613890', '我是一只消消乐2', '1260522024606953472', '第三章', '10', 'null', '0','2020-05-13 21:29:09');
-INSERT INTO `user_buy_record` VALUES ('2', '1255060328322027520', '1260400284744613890', '我是一只消消乐2', '1260564410687107072', '第四章', '10', 'null', '0','2020-05-13 21:40:38');
+INSERT INTO `user_buy_record` VALUES ('1', '1255060328322027520', '1260400284744613890', '大国游戏', '1260522024606953472', '第三章', '10', 'null', '0','2020-05-13 21:29:09');
+INSERT INTO `user_buy_record` VALUES ('2', '1255060328322027520', '1260400284744613890', '大国游戏', '1260564410687107072', '第四章', '10', 'null', '0','2020-05-13 21:40:38');
 
 -- ----------------------------
 -- Table structure for user_feedback
@@ -1635,27 +1635,6 @@ INSERT INTO `user_read_history` VALUES ('113', '1255060328322027520', '125467697
 INSERT INTO `user_read_history` VALUES ('117', '1255060328322027520', '1254946661743603712', '1254946914001629184', '2020-04-30 19:37:09', '2020-04-30 19:37:09');
 INSERT INTO `user_read_history` VALUES ('118', '1255060328322027520', '1254957312633352192', '3335449', '2020-04-30 19:37:36', '2020-04-30 19:37:36');
 
--- ----------------------------
--- Table structure for user_token_list
--- 通证与作品为一一对应
--- ----------------------------
-DROP TABLE IF EXISTS `user_token_list`;
-CREATE TABLE `user_token_list` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
-  `book_id` bigint(20) NOT NULL COMMENT '小说ID',
-  `book_name` varchar(50) DEFAULT NULL COMMENT '小说名',
-  `book_blockchain_address` varchar(42) DEFAULT NULL COMMENT '作品区块链合约地址0x开头',
-  `token_balance` bigint(20) DEFAULT NULL COMMENT '作品区块链合约通证数量',
-  `update_time` datetime DEFAULT NULL,
-  `update_block_height` bigint(20) NOT NULL COMMENT '通证更新的区块高度',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `key_uq_userid_bookid` (`user_id`,`book_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COMMENT='用户通证列表';
-
-INSERT INTO `user_token_list` VALUES ('11', '1413956884249956352','1414650094664269824','测试1','0xe592303d955ca9c515a7d62f374cf46cbeb42dfb','101','2021-07-14 10:53:51','0');
-INSERT INTO `user_token_list` VALUES ('12', '1413956884249956352','1414653690969579520','测试2','0x03afc7ca5b56434ebcf8f03eb80f9c52d6b36fed','102', '2021-07-15 10:53:51','0');
-INSERT INTO `user_token_list` VALUES ('13', '1413956884249956352','1414653961212780544','测试3','0x48b106f4bf30f9ef83557141341c060e6d954e19','103', '2021-07-12 08:52:37','0');
 
 -- ----------------------------
 -- Table structure for book_content0

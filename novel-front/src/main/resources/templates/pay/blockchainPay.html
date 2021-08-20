@@ -11,53 +11,29 @@
 
 <div th:replace="common/top :: top('')">
 </div>
+<div class="main box_center cf">
+    <div class="userBox cf">
+        <div class="my_r">
+            <div class="my_info cf">
+                <img id="imgLogo" class="user_big_head" src="/images/man.png" />
+                <div class="my_info_txt">
+                    <p class="my_name" id="my_name">
+                    </p>
+                    <ul class="my_list">
+                        <li class="my_blockchain_address"><i>区块链地址：</i><em class="red" id="blockchain_address"></em></li>
+                        <li class="my_blockchain_height"><i>区块链高度：</i><em class="red" id="blockchain_height">0</em><a class="btn_link" href="javascript:getBlockchainHeight()" >更新</a></li>
+                        <li class="my_gold"><i>账户余额：</i><em class="red" id="accountBalance">0</em>通证<!--<em class="red">+</em><em class="red">0</em>代金券--><a href="/pay/index.html" class="btn_link">立即充值</a></li>
+                        <li class="my_gold"><i>链上余额：</i><em class="red" id="accountBalanceOnChain">0</em><a class="btn_link" href="javascript:getAccountBalance()" >更新</a></li>
+                        <li class="my_gold"><i>通证名称：</i><em class="red" id="token_name">0</em><a class="btn_link" href="javascript:getTokenName()" >更新</a></li>
+                        <li class="my_gold"><i>通证余额：</i><em class="red" id="token_balance">0</em><a class="btn_link" href="javascript:getTokenBalance()" >更新</a></li>
 
-<!--修改替换aliPay过程-->
-<form action="/pay/blockchainPay" method="post" id="payform" name="payform">
-    <div class="main box_center cf">
-
-        <div class="channelWrap channelPay cf">
-
-            <div class="payBox cf">
-                <div class="payHead cf">
-                    <div class="fl">
-                        充值账号：<span class="user_name" id="my_name"></span>余额：<em class="red" id="accountBalance">0</em>书币<!--<em class="red">+0</em>代金券-->
-                    </div>
-                </div>
-                <div class="payCon">
-                    <h5>选择充值方式</h5>
-                    <ul class="pay_way cf" id="ulPayType">
-                        <li class="on"  valp="1"><img class="pay_pic" src="../images/pay_zfb.png" alt="支付宝支付" /></li>
-                        <li class="on"  valp="2"><img class="pay_pic" src="../images/pay_mc.png" alt="MOAC支付" /></li>
-                        <li valp="3"><img class="pay_pic" src="../images/pay_usdc.png" alt="USDC支付" /></li>
-
-                    </ul>
-                    <h5>选择充值金额</h5>
-                    <ul class="pay_way cf" id="ulZFWX">
-                        <li vals="10"><strong>10 MOAC</strong><span class="pay_mn">1000书币</span></li>
-                        <li vals="30"><strong>1 USDC</strong><span class="pay_mn">3000书币</span></li>
-                        <li vals="50"><strong>50元</strong><span class="pay_mn">5000书币<!--<em class="red">+ 送500代金券</em>--></span></li>
-                        <li vals="100"><strong>100元</strong><span class="pay_mn">10000书币<!--<em class="red">+ 送1200代金券</em>--></span></li>
-                        <li vals="200"><strong>200元</strong><span class="pay_mn">20000书币<!--<em class="red">+ 送3000代金券</em>--></span></li>
-                        <li vals="500"><strong>500元</strong><span class="pay_mn">50000书币<!--<em class="red">+ 送10000代金券</em>--></span></li>
-                    </ul>
-
-                </div>
-                <div class="payFoot">
-                    <strong class="tip_tit">温馨提示</strong>
-                    <ul class="tip_list">
-                        <li>1. 充值阅读权限仅限本书城使用</li>
-                        <li>2. 充值支持支付宝余额、USDC通证等支付</li>
-                        <li>3. 包年时间是365天，重复购买时间会累加</li>
-                        <li>4. 若充值遇到问题，<a href="/user/feedback.html" target="_blank" class="unlink black9">点此留言</a></li>
                     </ul>
                 </div>
             </div>
 
         </div>
     </div>
-    <input type="hidden" id="pValue" name="payAmount"  />
-</form>
+</div>
 
 
 <div th:replace="common/footer :: footer">

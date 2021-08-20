@@ -162,14 +162,16 @@ public class PayController extends BaseController {
     public void blockchainPay(Integer payAmount,HttpServletRequest request,HttpServletResponse httpResponse) {
 
         UserDetails userDetails = getUserDetails(request);
+        //debuging to show user name
+        log.debug("blockchainPay： "+userDetails.getUsername());
         if (userDetails == null) {
             //未登录，跳转到登陆页面
-            httpResponse.sendRedirect("/user/login.html?originUrl=/pay/aliPay?payAmount="+payAmount);
+            httpResponse.sendRedirect("/user/login.html?originUrl=/pay/blockchainPay?payAmount="+payAmount);
             return;
         }else {
             //创建充值订单
             Long outTradeNo = orderService.createPayOrder((byte)1,payAmount,userDetails.getId());
-
+            log.debug("支付数额： ", payAmount, "账户：", userDetails.getId());
             httpResponse.sendRedirect("/pay/blockchainPay/notify?out_trade_no="+outTradeNo);
 
 
@@ -215,7 +217,8 @@ public class PayController extends BaseController {
             // String tradeStatus = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
             String tradeStatus = "TRADE_SUCCESS";
 
-            //更新订单状态
+            log.debug("验证成功： ", tradeNo, "tradeStatus：", tradeStatus);
+            //更新订单状态并存入mysql数据库
             orderService.updatePayOrder(Long.parseLong(outTradeNo), tradeNo, tradeStatus);
 
 
@@ -225,8 +228,8 @@ public class PayController extends BaseController {
 
 
         }else {//验证失败
-            out.println("fail");
-
+//            out.println("fail");
+            log.debug("验证失败!");
             //调试用，写文本函数记录程序运行情况是否正常
             //String sWord = AlipaySignature.getSignCheckContentV1(params);
             //AlipayConfig.logResult(sWord);

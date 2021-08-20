@@ -2,6 +2,7 @@ package com.java2nb.novel.service;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.math.BigDecimal;
 
 /**
  * @author 11797
@@ -56,11 +57,13 @@ public interface BlockchainService {
 
     /**
      * 支付功能
-     * @param outTradeNo 商户订单号
-     * @param tradeNo      支付宝/微信 订单号
-     * @param tradeStatus 支付状态
+     * @param srcAddress 发送地址账户
+     * @param toAddress  目标地址账户
+     * @param amount 数额
+     * @param privateKey 发送账户的私钥
+     * @return 返回交易的HASH
      * */
-//    void payBookToken(Long outTradeNo, String tradeNo, String tradeStatus);
+     String sendSignedTransaction(String srcAddress, String toAddress, double amount, String privateKey);
 
     /**
      * 从用户地址转移指定数额的token到指定地址
@@ -69,7 +72,8 @@ public interface BlockchainService {
      * @param fromUserAddress      拥有通证的用户地址
      * @param toUserAddress 目标地址
      * @param Amount 通证数量
+     * @param privateKey 发送账户的私钥
      * @return 交易的HASH值
      * */
-    String transferBookToken(String bookTokenAddress, String fromUserAddress, String toUserAddress, int Amount);
+    String transferBookToken(String bookTokenAddress, String fromUserAddress, String toUserAddress, BigDecimal amount, String privateKey);
 }
