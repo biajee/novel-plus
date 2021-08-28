@@ -2,7 +2,6 @@ package com.java2nb.novel.service;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.math.BigDecimal;
 
 /**
  * @author 11797
@@ -54,6 +53,11 @@ public interface BlockchainService {
      * */
     String getTokenName(String tokenAddress);
 
+    /**
+     * 查询通证精度
+     * @return 返回输入通证的数值精度
+     * */
+    int getTokenDecimals(String tokenAddress);
 
     /**
      * 支付功能
@@ -75,5 +79,5 @@ public interface BlockchainService {
      * @param privateKey 发送账户的私钥
      * @return 交易的HASH值
      * */
-    String transferBookToken(String bookTokenAddress, String fromUserAddress, String toUserAddress, BigDecimal amount, String privateKey);
+    String transferBookToken(String bookTokenAddress, String fromUserAddress, String toUserAddress, double amount, String privateKey);
 }

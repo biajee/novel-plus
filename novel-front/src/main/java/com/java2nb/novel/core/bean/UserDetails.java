@@ -4,6 +4,7 @@ import lombok.Data;
 
 /**
  * @author 11797
+ * Added the accountAddress with the blockchain
  */
 @Data
 public class UserDetails {
@@ -13,4 +14,6 @@ public class UserDetails {
     private String username;
 
     private String nickName;
+
+    private String accountAddress;
 }

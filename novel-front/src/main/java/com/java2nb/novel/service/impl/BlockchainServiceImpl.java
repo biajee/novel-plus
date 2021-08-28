@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import org.web3j.abi.datatypes.generated.Uint256;
+import org.web3j.abi.datatypes.generated.Uint8;
 import org.web3j.crypto.*;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
@@ -53,20 +55,32 @@ public class BlockchainServiceImpl implements BlockchainService {
     private final Web3j web3j;
     private final Admin admin;
     private static final String emptyAddress = "0x0000000000000000000000000000000000000000";
-    private static final byte defaultBlockchainID = 101;
-    private static final int defaultGasPrice = 3;
-    private static final int defaultGasLimit = 1000;
 
-    public static String RPC_URL = "http://127.0.0.1:8545/";
-    public static String TESTNET = "http://gateway.moac.io/testnet";
-    //Mainnet:   http://web3.moac.moacchain.net
-    //Testnet:   http://gateway.moac.io/testnet
+    private static final int defaultGasPrice = 3;
+    private static final int defaultTokenDecimal = 18;
+    private static final int defaultGasLimit = 21000;// for moac TX only, Ether is 21000
+    private static final int defaultTokenGasLimit = 60000;// for moac TX only, Ether is 21000
+
+    private static byte defaultBlockchainID = 100;
+    public static String LOCALNODE = "http://127.0.0.1:8545/";
+    public static String TESTNET = "https://web3.testnet.moacchain.net";//"http://34.217.90.193:8932";//"http://gateway.moac.io/testnet";
+    //Mainnet:   http://web3.moac.moacchain.net, China,  https://web3.moac.moacchain.net.
+    //Testnet:   http://gateway.moac.io/testnet, China,https://web3.testnet.moacchain.net
     //Local node: http://localhost:8545
     public BlockchainServiceImpl() {
 
         //This service is running on the address passed as a parameter below
-        this.web3j = Web3j.build(new HttpService(TESTNET));
-        this.admin = Admin.build(new HttpService(TESTNET));
+        this.web3j = Web3j.build(new HttpService(LOCALNODE));
+        this.admin = Admin.build(new HttpService(LOCALNODE));
+        // Check to make sure the defaultBlockchainID matches the connecting node
+        try {
+            EthChainId chainId = web3j.ethChainId().send();
+            log.debug("查询ChainID " +chainId.getChainId());
+//            if (chainId.getChainId() != defaultBlockchainID) defaultBlockchainID = chainId.getChainId();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -168,6 +182,40 @@ public class BlockchainServiceImpl implements BlockchainService {
     }
 
     /**
+     * 查询代币精度
+     *
+     * @param web3j
+     * @param contractAddress
+     * @return
+     */
+    public int getTokenDecimals(String contractAddress) {
+        String methodName = "decimals";
+        String fromAddr = emptyAddress;
+        int decimal = 0;
+        List<Type> inputParameters = new ArrayList<>();
+        List<TypeReference<?>> outputParameters = new ArrayList<>();
+
+        TypeReference<Uint8> typeReference = new TypeReference<Uint8>() {
+        };
+        outputParameters.add(typeReference);
+
+        Function function = new Function(methodName, inputParameters, outputParameters);
+
+        String data = FunctionEncoder.encode(function);
+        Transaction transaction = Transaction.createEthCallTransaction(fromAddr, contractAddress, data);
+
+        EthCall ethCall;
+        try {
+            ethCall = web3j.ethCall(transaction, DefaultBlockParameterName.LATEST).sendAsync().get();
+            List<Type> results = FunctionReturnDecoder.decode(ethCall.getValue(), function.getOutputParameters());
+            decimal = Integer.parseInt(results.get(0).getValue().toString());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return decimal;
+    }
+
+    /**
      * Admin: 创建新账号
      * 使用web3j本身的crypto来产生钱包文件
      * TODO：研究一下安全问题
@@ -215,8 +263,59 @@ public class BlockchainServiceImpl implements BlockchainService {
      * @return 交易的HASH值
      * */
     @Override
-    public String transferBookToken(String bookTokenAddress, String fromUserAddress, String toUserAddress, BigDecimal amount, String privateKey) {
-        return null;
+    public String transferBookToken(String bookTokenAddress, String fromAddress, String toAddress, double inValue, String privateKey) {
+        String txHash = null;
+
+        try {
+
+            String methodName = "transfer";
+            List<Type> inputParameters = new ArrayList<>();
+            List<TypeReference<?>> outputParameters = new ArrayList<>();
+
+            Address tAddress = new Address(toAddress);
+
+            // Convert the input value to int with token decimal setting
+            BigDecimal scalingFactor = BigDecimal.TEN.pow(defaultTokenDecimal);
+            BigInteger amount = BigDecimal.valueOf(inValue).multiply(scalingFactor).toBigInteger();
+            log.debug("Token amount before:"+BigDecimal.valueOf(inValue)+" after "+BigDecimal.valueOf(inValue).multiply(scalingFactor));
+//            BigInteger amount = BigDecimal.valueOf(inValue).toBigInteger();
+            Uint256 value = new Uint256(amount);
+            log.debug("Token amount:"+amount+" value "+value.getValue());
+            inputParameters.add(tAddress);
+            inputParameters.add(value);
+
+            TypeReference<Bool> typeReference = new TypeReference<Bool>() {
+            };
+            outputParameters.add(typeReference);
+
+            Function function = new Function(methodName, inputParameters, outputParameters);
+
+            String data = FunctionEncoder.encode(function);
+
+            EthGetTransactionCount ethGetTransactionCount = web3j
+                    .ethGetTransactionCount(fromAddress, DefaultBlockParameterName.PENDING).sendAsync().get();
+            BigInteger nonce = ethGetTransactionCount.getTransactionCount();
+            BigInteger gasPrice = Convert.toWei(BigDecimal.valueOf(defaultGasPrice), Convert.Unit.GWEI).toBigInteger();
+
+            log.debug("Token info:"+nonce+" amount "+value.getTypeAsString());
+            // Create the Contract call TX and sign with private key
+            //
+            String signedData;
+
+            signedData = signTransaction(nonce, gasPrice, BigInteger.valueOf(defaultGasLimit), bookTokenAddress,
+                    (BigInteger)null, data, defaultBlockchainID, privateKey);
+            if (signedData != null) {
+                log.debug("Token SignedData:"+signedData);
+                EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(signedData).send();
+                txHash = ethSendTransaction.getTransactionHash();
+                log.debug("Token TXhash:"+txHash);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return txHash;
 
     }
 
@@ -231,20 +330,15 @@ public class BlockchainServiceImpl implements BlockchainService {
 
         EthGetTransactionCount ethGetTransactionCount = null;
         try {
-            ethGetTransactionCount = web3j.ethGetTransactionCount(srcAddress, DefaultBlockParameterName.PENDING).send();
+            //找到最新的nonce
+            ethGetTransactionCount = web3j.ethGetTransactionCount(srcAddress, DefaultBlockParameterName.LATEST).send();
         } catch (IOException e) {
             e.printStackTrace();
         }
         if (ethGetTransactionCount == null) return null;
         nonce = ethGetTransactionCount.getTransactionCount();
         log.debug("srcAddress:"+srcAddress+" toAddress "+toAddress+" : "+amount+" nonce: "+nonce);
-        // Grab the connect chain's ID
-        // BigInteger blockchainId;
-//        try {
-//            blockchainId = web3j.EthChainId().send();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
         // Use predefined chainID
         String data = "";//Optional
         byte chainId = defaultBlockchainID;//ChainId.ROPSTEN;//测试网络

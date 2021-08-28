@@ -16,31 +16,62 @@ Date: 2021-08-07 21:42:20
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
+-- Table structure for user_account
+-- 用户区块链账户信息，包括账户地址、私钥、keystore和密码
+-- 钱包文件长度一般不超过500个bytes；
+-- 一个用户名称有可能对应多个钱包地址；
+-- TODO： 用户私钥将来需要替换，目前仅为DEBUG用。
+-- ----------------------------
+DROP TABLE IF EXISTS `user_account`;
+CREATE TABLE `user_account` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `blockchain_address` varchar(42) DEFAULT NULL COMMENT '用户账户地址',
+  `private_key` varchar(100) DEFAULT NULL COMMENT '用户私钥',
+  `keystore` varchar(500) DEFAULT NULL COMMENT '用户钱包文件',
+  `password` varchar(50) NOT NULL COMMENT '钱包文件密码',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='账户';
+
+-- ----------------------------
+-- Records of 通证
+-- 本地节点测试token：
+
+-- ----------------------------
+INSERT INTO `user_account` VALUES ('1', '1260400284744613891', '0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b', '0xc75a5f85ef779dcf95c651612efb3c3b9a6dfafb1bb5375905454d9fc8be8a6b', null, null);
+INSERT INTO `user_account` VALUES ('2', '1413956884249956352', '0xa8863fc8ce3816411378685223c03daae9770ebb', null, null, null);
+
+
+-- ----------------------------
 -- Table structure for token_details
 -- 用于作品的通证存储，根据区块链浏览器的内容设计
+-- 一个作品只能有一个token，通证与作品为一一对应
 -- ----------------------------
-DROP TABLE IF EXISTS `token_details`;
-CREATE TABLE `token_details` (
+DROP TABLE IF EXISTS `book_token`;
+CREATE TABLE `book_token` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `book_id` bigint(20) DEFAULT NULL COMMENT '小说ID',
   `token_name` bigint(20) DEFAULT NULL COMMENT '通证名称',
+  `token_symbol` varchar(20) DEFAULT NULL COMMENT '通证代码',
   `token_address` varchar(42) DEFAULT NULL COMMENT '通证合约地址',
+  `token_txhash` varchar(100) DEFAULT NULL COMMENT '通证合约产生的交易HASH',
   `total_supply` bigint(20) DEFAULT NULL COMMENT '通证总量',
   `token_creator` varchar(42) DEFAULT NULL COMMENT '通证的拥有者或者管理者',
   `decimals` tinyint(4) DEFAULT '16' COMMENT '通证小数位置，默认使用以太坊的1e-16',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='作者表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='作品通证';
 
 -- ----------------------------
 -- Records of 通证
 -- ----------------------------
-INSERT INTO `token_details` VALUES ('1', null, 'reerer', 'abc', '13560487656', '23484388', '23484388@qq.com', '0', '0', null);
-INSERT INTO `token_details` VALUES ('2', '另一种历史', 'rwrr445554', '梦入神机', '13560421324', '1179705413', 'reerer@qq.com', '0', '0', '2020-05-13 14:01:31');
+INSERT INTO `token_details` VALUES ('1', '1423443050795876354','弘略演绎', '1423443050795876354','0xe6beb4e09e64c0f61ef639944ef97e0ca9a069a7', '0x3ea3634a33c88959247f4a191177d04cb9a6272be385a6920592b5e5de024636', '1000000', '0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b', '18', '2021-08-26 13:00:30');
+INSERT INTO `token_details` VALUES ('2', '1423443050795876353','另一种历史', '1423443050795876353','0xc3c6e85820d97477172498ce7aed37b0bb22e67e', '0x513b0393b0223c54fee918bb12c1d047c63fb26ee5988ebc2338243953b96ac6', '1000000', '0xa8863fc8ce3816411378685223c03daae9770ebb', '18', '2021-08-25 14:01:31');
 
 
 -- ----------------------------
 -- Table structure for user_token_list
--- 通证与作品为一一对应
+--
 -- ----------------------------
 DROP TABLE IF EXISTS `user_token_list`;
 CREATE TABLE `user_token_list` (

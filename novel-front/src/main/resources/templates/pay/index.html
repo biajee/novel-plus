@@ -101,11 +101,12 @@
 
         var payType = $("#ulPayType").find("li.on").attr("valp");
 
+console.log("Pay amount:", $(this).attr("vals"));
         // 调用区块链支付
-        if(payType == 3){
+        //if(payType == 3){
              //layer.alert("墨客支付暂未开通，敬请期待");
-             return ;
-        }
+             //return ;
+        //}
 
         $("#pValue").val($(this).attr("vals"));
 

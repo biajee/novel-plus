@@ -79,6 +79,7 @@ public class UserController extends BaseController {
 
     /**
      * 刷新token
+     * 加入区块链地址
      */
     @PostMapping("refreshToken")
     public ResultBean refreshToken(HttpServletRequest request) {
@@ -90,6 +91,7 @@ public class UserController extends BaseController {
             UserDetails userDetail = jwtTokenUtil.getUserDetailsFromToken(token);
             data.put("username", userDetail.getUsername());
             data.put("nickName", userDetail.getNickName());
+            data.put("accountAddress", userDetail.getAccountAddress());
             return ResultBean.ok(data);
 
         } else {
@@ -204,6 +206,7 @@ public class UserController extends BaseController {
     @GetMapping("userInfo")
     public ResultBean userInfo(HttpServletRequest request) {
         UserDetails userDetails = getUserDetails(request);
+        log.debug("userInfo： "+userDetails.getUsername()+" "+userDetails.getAccountAddress());
         if (userDetails == null) {
             return ResultBean.fail(ResponseStatus.NO_LOGIN);
         }
@@ -313,17 +316,40 @@ public class UserController extends BaseController {
 
     /**
      * 使用原生币支付
+     * 返回交易HASH
      * */
     @PostMapping("payWithBlockchain")
-    public ResultBean addToBookShelf(String toAddress,double value, HttpServletRequest request) {
+    public ResultBean payWithBlockchain(String toAddress,double value, HttpServletRequest request) {
         UserDetails userDetails = getUserDetails(request);
         if (userDetails == null) {
             return ResultBean.fail(ResponseStatus.NO_LOGIN);
         }
+        log.debug("payWithBlockchain src： "+userDetails.getUsername()+" "+userDetails.getAccountAddress());
         String srcAddress="0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b";
         String privateKey="0xc75a5f85ef779dcf95c651612efb3c3b9a6dfafb1bb5375905454d9fc8be8a6b";
 
-        blockchainService.sendSignedTransaction(srcAddress, toAddress, value*0.001, privateKey);
-        return ResultBean.ok();
+        return ResultBean.ok(blockchainService.sendSignedTransaction(srcAddress, toAddress, value, privateKey));
+    }
+
+    /**
+     * 使用用户账户的通证支付
+     * 返回交易HASH
+     * tokenAddress - 通证合约地址
+     * srcAddress - 发起账户地址（默认为用户本人地址），用于调出私钥，进行签名
+     * toAddress - 通证转移目标地址
+     * value - 转移的通证数量，需要使用合约中的decimal变量转换为bigint
+     * */
+    @PostMapping("payWithToken")
+    public ResultBean payWithToken(String tokenAddress, String srcAddress, String toAddress, double value, HttpServletRequest request) {
+        UserDetails userDetails = getUserDetails(request);
+        if (userDetails == null) {
+            return ResultBean.fail(ResponseStatus.NO_LOGIN);
+        }
+        log.debug("payWithToken src： "+userDetails.getUsername()+" "+userDetails.getAccountAddress());
+        log.debug("payWithToken： "+tokenAddress+" to "+toAddress);
+        srcAddress="0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b";
+        String privateKey="0xc75a5f85ef779dcf95c651612efb3c3b9a6dfafb1bb5375905454d9fc8be8a6b";
+
+        return ResultBean.ok(blockchainService.transferBookToken(tokenAddress, srcAddress, toAddress, value, privateKey));
     }
 }

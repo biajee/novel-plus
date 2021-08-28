@@ -44,7 +44,6 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorIncomeDetailMapper authorIncomeDetailMapper;
 
-
     private final AuthorIncomeMapper authorIncomeMapper;
 
 

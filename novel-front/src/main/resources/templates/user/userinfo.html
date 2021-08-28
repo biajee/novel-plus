@@ -27,16 +27,29 @@
             <div class="my_info cf">
                 <img id="imgLogo" class="user_big_head" src="/images/man.png" />
                 <div class="my_info_txt">
-                    <p class="my_name" id="my_name">
-                        </p>
+                    <p class="my_name" id="my_name"></p>
                     <ul class="my_list">
                         <li class="my_blockchain_address"><i>区块链地址：</i><em class="red" id="blockchain_address"></em></li>
                         <li class="my_blockchain_height"><i>区块链高度：</i><em class="red" id="blockchain_height">0</em><a class="btn_link" href="javascript:getBlockchainHeight()" >更新</a></li>
-                        <li class="my_account_balance"><i>账户余额：</i><em class="red" id="accountBalance">0</em>通证<!--<em class="red">+</em><em class="red">0</em>代金券--><a href="/pay/index.html" class="btn_link">立即充值</a></li>
-                        <li class="my_account_chainbalance"><i>链上余额：</i><em class="red" id="accountBalanceOnChain">0</em><a class="btn_link" href="javascript:getAccountBalance()" >更新</a></li>
-                        <li class="my_token_name"><i>通证名称：</i><em class="red" id="token_name">0</em><a class="btn_link" href="javascript:getTokenName()" >更新</a></li>
-                        <li class="my_token_balance"><i>通证余额：</i><em class="red" id="token_balance">0</em><a class="btn_link" href="javascript:getTokenBalance()" >更新</a></li>
-                        <li class="my_gold"><i>通证充值：</i><em class="red" id="tx_hash">0x</em><a class="btn_link" href="javascript:payWithBlockchain()" >充值</a></li>
+                        <li class="my_account_balance"><i>账户余额：</i><em class="red" id="accountBalance">0</em>通证<!--<em class="red">+</em><em class="red">0</em>代金券--><a href="/pay/index.html" class="btn_link">立即充值</a>
+                        <i> 链上余额：</i><em class="red" id="accountBalanceOnChain">0</em><a class="btn_link" href="javascript:getMyAccountBalance()" >更新</a></li>
+                        <li class="token_tx_test"><i>通证地址：</i><input type="text" id="input_token_address" value="0xe6beb4e09e64c0f61ef639944ef97e0ca9a069a7"><a class="btn_link" href="javascript:getInputTokenInfo()" >获取账户通证信息</a></li>
+                        <li class="token_tx_test"><i>通证名称：</i><em class="red" id="input_token_name">null</em><i>通证余额：</i><em class="red" id="input_token_balance">0</em></li>
+                    </ul>
+                    <p>------------测试地址-------------------------------</p>
+                    <h3>测试发送地址：0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b</h3>
+                    <p>------------原生币转移测试-------------------------------</p>
+                    <ul calss="tx_test">
+                        <li class="tx_test"><i>原生币账户余额：</i><em class="red" id="test_account_balance">0</em><a class="btn_link" href="javascript:getTestAccountBalance()" >更新</a></li>
+                        <li class="tx_test"><i>转移原生币数量：</i><input type="number" id="tx_value" value="1.0"><a class="btn_link" href="javascript:payWithBlockchain()" >测试</a></li>
+                        <li class="tx_test"><i>交易HASH：</i><em class="red" id="tx_hash">0x</em></li>
+                    </ul>
+                    <p>-----------通证转移测试-------------------------------</p>
+                    <ul calss="token_test">
+                        <li class="token_test"><i>通证名称：</i><em class="red" id="token_name">null</em>
+                            <i>通证余额：</i><em class="red" id="token_balance">0</em><a class="btn_link" href="javascript:getTestTokenBalance()" >更新</a></li>
+                        <li class="token_test"><i>转移通证数量：</i><input type="number" id="tx_token_value" value="1.0"><a class="btn_link" href="javascript:payWithToken()" >通证转移测试</a></li>
+                        <li class="token_test"><i>交易HASH：</i><em class="red" id="token_tx_hash">0x</em></li>
 
                     </ul>
                 </div>
@@ -86,8 +99,12 @@
 <script type="text/javascript">
     //网页开始时候加载区块链信息
     //For testnet use only
-    inTokenAddress="0xf2f4eec6c2adfcf780aae828de0b25f86506ffae";
+    //inTokenAddress="0xf2f4eec6c2adfcf780aae828de0b25f86506ffae";
+    inTokenAddress="0xc3c6e85820d97477172498ce7aed37b0bb22e67e";//localhost
+
     inTestAddress="0xa8863fc8ce3816411378685223c03daae9770ebb";//0x968ddf25855f55306f3aa24973d73709d8c743a6
+    testAddress="0x7312F4B8A4457a36827f185325Fd6B66a3f8BB8B";//测试通证发送地址
+    userAddress=null;
     getBlockchainHeight();
 
     //查询用户信息
@@ -110,6 +127,7 @@
                  //
                 $("#blockchain_address").html(data.data.blockchainAddress);
                 $("#accountBalance").html(data.data.accountBalance);
+                userAddress = data.data.blockchainAddress;
 
             } else if (data.code == 1001) {
                 //未登录
@@ -198,17 +216,50 @@ console.log("data.data:", data.data);
 
     }
 
+    //获取当前用户通证信息，并更新相应显示
+    function getInputTokenInfo(){
+        console.log("getMyTokenInfo: userAddress", userAddress);
+        var inputTokenAddress = document.getElementById("input_token_address").value;
+         console.log("inputTokenAddress:",inputTokenAddress);
+         tname = getTokenName(inputTokenAddress);
+        tokenBalance = getTokenBalance(inputTokenAddress, userAddress)*1e-18;
+        console.log("Returned token name", tname," balance:", tokenBalance);
+        $("#input_token_balance").html(tokenBalance);
+        //document.getElementById("input_token_name").innerHTML=tname;
+        //$("#input_token_name").html(getTokenName(inputTokenAddress));
+    }
+
+    // Return the balance of user account
+    function getMyAccountBalance(){
+    console.log("getMyAccountBalance:", userAddress);
+    getAccountBalanceByAddress(userAddress);
+           // $("#accountBalanceOnChain").html(getAccountBalanceByAddress(userAddress));
+    }
+
+    function getTestAccountBalance(){
+    bal = getAccountBalanceByAddress(testAddress);
+    console.log("getTestAccountBalance:", testAddress, "bal:", bal);
+            // $("#accountBalanceOnChain").html(bal);
+    }
+
     // 使用web3j直接对接区块链后台，显示用户原生通证余额
-    function getAccountBalance(){
+    function getAccountBalanceByAddress(inAccountAddress){
         $.ajax({
             type: "GET",
             url: "/user/getAccountBalance",
-            data: {'accountAddress':inTestAddress},
+            data: {'accountAddress':inAccountAddress},
             dataType: "json",
             success: function (data) {
                 if (data.code == 200) {
-                  $("#accountBalanceOnChain").html(data.data);
-console.log("data.data:", data.data);
+                  if ( inAccountAddress == userAddress ){
+                    $("#accountBalanceOnChain").html(data.data*1e-18);
+                  }else{
+                    // show test account balance
+                    $("#test_account_balance").html(data.data*1e-18);
+                  }
+
+//console.log("getAccountBalanceByAddress:", inAccountAddress, " data:", data.data);
+//return data.data;
 
                 } else if(data.code == 1001){
                     //未登录
@@ -223,20 +274,47 @@ console.log("data.data:", data.data);
                 layer.alert('网络异常');
             }
         })
+    }
 
+    //Hard coded to show the srcAccount balance
+    function getSrcAccountBalance(){
+        $.ajax({
+            type: "GET",
+            url: "/user/getAccountBalance",
+            data: {'accountAddress':testAddress},
+            dataType: "json",
+            success: function (data) {
+                if (data.code == 200) {
+                // 原生币，需要减去decimal数量
+                  $("#test_account_balance").html(data.data*1e-18);
+console.log("getSrcAccountBalance", testAddress, ".data:", data.data);
+
+                } else if(data.code == 1001){
+                    //未登录
+                    location.href = '/user/login.html?originUrl='+decodeURIComponent(location.href);
+
+                }else {
+                    layer.alert(data.msg);
+                }
+
+            },
+            error: function () {
+                layer.alert('网络异常');
+            }
+        })
     }
 
     // 使用web3j直接对接区块链后台，显示通证名称
-    function getTokenName(){
+    function getTokenName(inputTokenAddress){
         $.ajax({
             type: "GET",
             url: "/contract/getTokenName",
-            data: {'tokenAddress':inTokenAddress},
+            data: {'tokenAddress':inputTokenAddress},
             dataType: "json",
             success: function (data) {
                 if (data.code == 200) {
                   $("#token_name").html(data.data);
-console.log("data.data:", data.data);
+                  $("#input_token_name").html(data.data);
 
                 } else if(data.code == 1001){
                     //未登录
@@ -254,17 +332,30 @@ console.log("data.data:", data.data);
 
     }
 
+    function getTestTokenBalance(){
+        var inputTokenAddress = document.getElementById("input_token_address").value;
+        tokenBalance = getTokenBalance(inputTokenAddress, testAddress)*1e-18;
+        console.log("inputTokenAddress:",inputTokenAddress, " bal ", tokenBalance);
+    }
+
     // 使用web3j直接对接区块链后台，显示用户原生通证余额
-    function getTokenBalance(){
+    function getTokenBalance(inTokenAddress, inAccountAddress){
         $.ajax({
             type: "GET",
             url: "/contract/getTokenBalance",
-            data: {'tokenAddress':inTokenAddress, 'accountAddress':inTestAddress},
+            data: {'tokenAddress':inTokenAddress, 'accountAddress':inAccountAddress},
             dataType: "json",
             success: function (data) {
                 if (data.code == 200) {
-                  $("#token_balance").html(data.data);
-console.log("data.data:", data.data);
+                console.log("getTokenBalance Address:", inTokenAddress, "addr:", inAccountAddress," data:", data.data);
+                  if ( inAccountAddress == userAddress ){
+                    //Update the user account info
+                    $("#input_token_balance").html(data.data*1e-18);
+                  }else{
+                    //Update test account info
+                    $("#token_balance").html(data.data*1e-18);
+
+                  }
 
                 } else if(data.code == 1001){
                     //未登录
@@ -283,21 +374,61 @@ console.log("data.data:", data.data);
     }
 
     // 使用web3j直接对接区块链后台，测试原生通证交易
-    // 向原账户地址发送0.1个测试币
+    // 充值功能，默认使用用户自己的账户地址为发送地址，输入地址为目标地址
+    // 将来为获取通证的过程
+    // 向测试账户地址发送系统原生币
     function payWithBlockchain() {
-    var toAddress = $("#blockchain_address").val();
-    console.log("toAddress:",toAddress);
+     var txValue = document.getElementById("tx_value").value;
+     console.log("toAddress:",userAddress, " value:", txValue);
         $.ajax({
             type: "POST",
             url: "/user/payWithBlockchain",
-            data: {'toAddress': inTestAddress, 'value': 0.01},
+            data: {'toAddress': userAddress, 'value': txValue},
             dataType: "json",
             success: function (data) {
                 if (data.code == 200) {
                     $("#tx_hash").html(data.data);
                     //显示交易HASH
                     console.log("payWithBlockchain.data:", data.data);
-                    console.log("ID:", toAddress);
+                    console.log("ID userAddress:", userAddress);//Set in getUserInfo
+                } else if (data.code == 1001) {
+                    //未登录
+                    location.href = '/user/login.html?originUrl=' + decodeURIComponent(location.href);
+
+                } else {
+                    layer.alert(data.msg);
+                }
+
+            },
+            error: function () {
+                layer.alert('网络异常');
+            }
+        })
+
+    }
+
+    // 使用web3j直接对接区块链后台，测试合约通证交易
+    // 默认使用用户自己的账户地址为发送地址，输入地址为目标地址
+    function payWithToken() {
+        //Get the token info from input box
+        var txValue = document.getElementById("tx_token_value").value;
+        var inputTokenAddress = document.getElementById("input_token_address").value;
+        console.log("payWithToken inputTokenAddress:",inputTokenAddress);
+        console.log("payWithToken toAddress:",userAddress, " value:", txValue);
+        $.ajax({
+            type: "POST",
+            url: "/user/payWithToken",
+            data: {'tokenAddress': inputTokenAddress,
+            'srcAddress': testAddress,
+            'toAddress': userAddress,
+            'value': txValue},
+            dataType: "json",
+            success: function (data) {
+                if (data.code == 200) {
+                    //显示交易HASH
+                    $("#token_tx_hash").html(data.data);
+                    console.log("payWithToken.TXHASH:", data.data);
+
                 } else if (data.code == 1001) {
                     //未登录
                     location.href = '/user/login.html?originUrl=' + decodeURIComponent(location.href);

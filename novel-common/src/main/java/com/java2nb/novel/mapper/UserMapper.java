@@ -59,7 +59,7 @@ public interface UserMapper {
         @Result(column="username", property="username", jdbcType=JdbcType.VARCHAR),
         @Result(column="password", property="password", jdbcType=JdbcType.VARCHAR),
         @Result(column="nick_name", property="nickName", jdbcType=JdbcType.VARCHAR),
-            @Result(column="blockchain_address", property="blockchainAddress", jdbcType=JdbcType.VARCHAR),
+        @Result(column="blockchain_address", property="blockchainAddress", jdbcType=JdbcType.VARCHAR),
         @Result(column="user_photo", property="userPhoto", jdbcType=JdbcType.VARCHAR),
         @Result(column="user_sex", property="userSex", jdbcType=JdbcType.TINYINT),
         @Result(column="account_balance", property="accountBalance", jdbcType=JdbcType.BIGINT),
@@ -97,7 +97,7 @@ public interface UserMapper {
             .map(username).toProperty("username")
             .map(password).toProperty("password")
             .map(nickName).toProperty("nickName")
-                    .map(blockchainAddress).toProperty("blockchainAddress")
+            .map(blockchainAddress).toProperty("blockchainAddress")
             .map(userPhoto).toProperty("userPhoto")
             .map(userSex).toProperty("userSex")
             .map(accountBalance).toProperty("accountBalance")
@@ -114,7 +114,7 @@ public interface UserMapper {
             .map(username).toProperty("username")
             .map(password).toProperty("password")
             .map(nickName).toProperty("nickName")
-                    .map(blockchainAddress).toProperty("blockchainAddress")
+            .map(blockchainAddress).toProperty("blockchainAddress")
             .map(userPhoto).toProperty("userPhoto")
             .map(userSex).toProperty("userSex")
             .map(accountBalance).toProperty("accountBalance")
@@ -131,6 +131,7 @@ public interface UserMapper {
             .map(username).toPropertyWhenPresent("username", record::getUsername)
             .map(password).toPropertyWhenPresent("password", record::getPassword)
             .map(nickName).toPropertyWhenPresent("nickName", record::getNickName)
+            .map(blockchainAddress).toPropertyWhenPresent("blockchainAddress", record::getBlockchainAddress)
             .map(userPhoto).toPropertyWhenPresent("userPhoto", record::getUserPhoto)
             .map(userSex).toPropertyWhenPresent("userSex", record::getUserSex)
             .map(accountBalance).toPropertyWhenPresent("accountBalance", record::getAccountBalance)
@@ -173,6 +174,7 @@ public interface UserMapper {
                 .set(username).equalTo(record::getUsername)
                 .set(password).equalTo(record::getPassword)
                 .set(nickName).equalTo(record::getNickName)
+                .set(blockchainAddress).equalTo(record::getBlockchainAddress)
                 .set(userPhoto).equalTo(record::getUserPhoto)
                 .set(userSex).equalTo(record::getUserSex)
                 .set(accountBalance).equalTo(record::getAccountBalance)
@@ -187,6 +189,7 @@ public interface UserMapper {
                 .set(username).equalToWhenPresent(record::getUsername)
                 .set(password).equalToWhenPresent(record::getPassword)
                 .set(nickName).equalToWhenPresent(record::getNickName)
+                .set(blockchainAddress).equalToWhenPresent(record::getBlockchainAddress)
                 .set(userPhoto).equalToWhenPresent(record::getUserPhoto)
                 .set(userSex).equalToWhenPresent(record::getUserSex)
                 .set(accountBalance).equalToWhenPresent(record::getAccountBalance)
@@ -201,6 +204,7 @@ public interface UserMapper {
             c.set(username).equalTo(record::getUsername)
             .set(password).equalTo(record::getPassword)
             .set(nickName).equalTo(record::getNickName)
+                    .set(blockchainAddress).equalTo(record::getBlockchainAddress)
             .set(userPhoto).equalTo(record::getUserPhoto)
             .set(userSex).equalTo(record::getUserSex)
             .set(accountBalance).equalTo(record::getAccountBalance)
@@ -217,6 +221,7 @@ public interface UserMapper {
             c.set(username).equalToWhenPresent(record::getUsername)
             .set(password).equalToWhenPresent(record::getPassword)
             .set(nickName).equalToWhenPresent(record::getNickName)
+            .set(blockchainAddress).equalToWhenPresent(record::getBlockchainAddress)
             .set(userPhoto).equalToWhenPresent(record::getUserPhoto)
             .set(userSex).equalToWhenPresent(record::getUserSex)
             .set(accountBalance).equalToWhenPresent(record::getAccountBalance)

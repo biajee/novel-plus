@@ -21,6 +21,7 @@ import java.util.Date;
 
 /**
  * @author 11797
+ * 加入合约的产生，查询和使用
  */
 @RequestMapping("author")
 @RestController
@@ -198,6 +199,9 @@ public class AuthorController extends BaseController{
         return ResultBean.ok(authorService.listIncomeMonthByPage(page,pageSize,getUserDetails(request).getId(),bookId));
     }
 
+    /**
+     * 查询作家信息
+     * */
     private Author checkAuthor(HttpServletRequest request) {
 
         UserDetails userDetails = getUserDetails(request);
@@ -214,10 +218,7 @@ public class AuthorController extends BaseController{
             throw new BusinessException(ResponseStatus.AUTHOR_STATUS_FORBIDDEN);
         }
 
-
         return author;
-
-
     }
 
 

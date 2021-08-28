@@ -25,9 +25,12 @@ import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.web3j.crypto.*;// use to create account keypairs
 import java.util.Date;
 import java.util.List;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 
 import static com.java2nb.novel.mapper.BookDynamicSqlSupport.id;
 import static com.java2nb.novel.mapper.UserBookshelfDynamicSqlSupport.userBookshelf;
@@ -61,6 +64,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails register(User user) {
+        String privateKey = null;
+        String accountAddress = null;
         //查询用户名是否已注册
         SelectStatementProvider selectStatement = select(count(id))
                 .from(UserDynamicSqlSupport.user)
@@ -76,6 +81,16 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(user,entity);
         //数据库生成注册记录，
         //TODO 增加钱包地址的生成
+        //使用web3j的内置功能，生成公私钥对，暂时直接存储公私钥到user记录中
+        try{
+            ECKeyPair ecKeyPair = Keys.createEcKeyPair();
+            privateKey = ecKeyPair.getPrivateKey().toString(16);
+            accountAddress = Keys.getAddress(ecKeyPair);
+        }catch (NoSuchProviderException|NoSuchAlgorithmException|InvalidAlgorithmParameterException e) {
+            log.debug("In User register, 密钥对生成错误:"+e);
+        }
+
+
         Long id = new IdWorker().nextId();
         entity.setId(id);
         entity.setNickName(entity.getUsername());
@@ -83,15 +98,22 @@ public class UserServiceImpl implements UserService {
         entity.setCreateTime(currentDate);
         entity.setUpdateTime(currentDate);
         entity.setPassword(MD5Util.MD5Encode(entity.getPassword(), Charsets.UTF_8.name()));
+        entity.setBlockchainAddress(accountAddress);
+
+        // 存入mysql数据库
         userMapper.insertSelective(entity);
         //生成UserDetail对象并返回
         UserDetails userDetails = new UserDetails();
         userDetails.setId(id);
         userDetails.setUsername(entity.getUsername());
         userDetails.setNickName(entity.getNickName());
+        userDetails.setAccountAddress(entity.getBlockchainAddress());
         return userDetails;
     }
 
+    /*
+    * 加入UserDetails的内容
+     */
     @Override
     public UserDetails login(User user) {
         //根据用户名密码查询记录
@@ -111,6 +133,7 @@ public class UserServiceImpl implements UserService {
         userDetails.setId(user.getId());
         userDetails.setNickName(user.getNickName());
         userDetails.setUsername(user.getUsername());
+        userDetails.setAccountAddress(user.getBlockchainAddress());
         return userDetails;
     }
 
