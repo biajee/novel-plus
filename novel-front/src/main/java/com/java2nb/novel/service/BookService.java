@@ -64,6 +64,12 @@ public interface BookService {
     Book queryBookDetail(Long id);
 
     /**
+     * 查询小说通证的详情信息
+     * @return 作品通证信息
+     * @param id 书籍ID*/
+    Book queryBookTokenDetail(Long id);
+
+    /**
      * 查询目录列表
      * @param bookId 书籍ID
      * @param orderBy 排序

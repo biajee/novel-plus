@@ -248,6 +248,16 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public Book queryBookTokenDetail(Long bookId) {
+        SelectStatementProvider selectStatement = select(book_token.allColumns())
+                .from(book_token)
+                .where(id, isEqualTo(bookId))
+                .build()
+                .render(RenderingStrategies.MYBATIS3);
+        return bookTokenMapper.selectMany(selectStatement).get(0);
+    }
+
+    @Override
     public List<BookIndex> queryIndexList(Long bookId, String orderBy, Integer page, Integer pageSize) {
         if (StringUtils.isNotBlank(orderBy)) {
             OrderByHelper.orderBy(orderBy);

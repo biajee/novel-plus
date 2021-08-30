@@ -19,7 +19,7 @@
     startSupport: function () {
         var rStr = '<a class="closePopup" href="javascript:void(0);" onclick="javascript:uFans.closeBox();"></a>';
         rStr += '<div class="popupTit">';
-        rStr += '	<h3>我要捧场作品</h3>';
+        rStr += '	<h3>我要奖励作品</h3>';
         rStr += '</div>';
         rStr += '<div class="propsList cf">';
         rStr += '	<ul>';

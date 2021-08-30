@@ -93,6 +93,13 @@ public class BookController extends BaseController{
         return ResultBean.ok(bookService.queryBookDetail(id));
     }
 
+    /**
+     * 查询小说通证的详情信息
+     * */
+    @GetMapping("queryBookTokenDetail/{id}")
+    public ResultBean queryBookTokenDetail(@PathVariable("id") Long id){
+        return ResultBean.ok(bookService.queryBookTokenDetail(id));
+    }
 
     /**
      * 查询小说排行信息
