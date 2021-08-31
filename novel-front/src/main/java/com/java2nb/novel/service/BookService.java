@@ -67,7 +67,7 @@ public interface BookService {
      * 查询小说通证的详情信息
      * @return 作品通证信息
      * @param id 书籍ID*/
-    Book queryBookTokenDetail(Long id);
+    BookToken queryBookTokenDetail(Long id);
 
     /**
      * 查询目录列表

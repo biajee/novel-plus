@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.java2nb.novel.mapper.BookCategoryDynamicSqlSupport.bookCategory;
+import static com.java2nb.novel.mapper.BookTokenDynamicSqlSupport.bookToken;
 import static com.java2nb.novel.mapper.BookCommentDynamicSqlSupport.bookComment;
 import static com.java2nb.novel.mapper.BookContentDynamicSqlSupport.bookContent;
 import static com.java2nb.novel.mapper.BookContentDynamicSqlSupport.content;
@@ -81,6 +82,8 @@ public class BookServiceImpl implements BookService {
     private final FrontBookCommentMapper bookCommentMapper;
 
     private final BookAuthorMapper bookAuthorMapper;
+
+    private final BookTokenMapper bookTokenMapper;
 
     private final CacheService cacheService;
 
@@ -247,11 +250,14 @@ public class BookServiceImpl implements BookService {
         return bookMapper.selectMany(selectStatement).get(0);
     }
 
+    /*
+     * Search and return the book token info by bookID
+     */
     @Override
-    public Book queryBookTokenDetail(Long bookId) {
-        SelectStatementProvider selectStatement = select(book_token.allColumns())
-                .from(book_token)
-                .where(id, isEqualTo(bookId))
+    public BookToken queryBookTokenDetail(Long bookId) {
+        SelectStatementProvider selectStatement = select(bookToken.allColumns())
+                .from(bookToken)
+                .where(BookTokenDynamicSqlSupport.bookId, isEqualTo(bookId))
                 .build()
                 .render(RenderingStrategies.MYBATIS3);
         return bookTokenMapper.selectMany(selectStatement).get(0);

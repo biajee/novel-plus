@@ -256,9 +256,9 @@ public class BlockchainServiceImpl implements BlockchainService {
      * 从用户地址转移指定数额的token到指定地址
      *
      * @param bookTokenAddress 通证合约地址
-     * @param fromUserAddress      拥有通证的用户地址
-     * @param toUserAddress 目标地址
-     * @param Amount 通证数量
+     * @param fromAddress      拥有通证的用户地址
+     * @param toAddress 目标地址
+     * @param inValue 通证数量
      * @param privateKey 发送账户的私钥
      * @return 交易的HASH值
      * */

@@ -54,9 +54,9 @@ CREATE TABLE `book_token` (
   `token_symbol` varchar(20) DEFAULT NULL COMMENT '通证代码',
   `token_address` varchar(42) DEFAULT NULL COMMENT '通证合约地址',
   `token_txhash` varchar(100) DEFAULT NULL COMMENT '通证合约产生的交易HASH',
-  `total_supply` bigint(20) DEFAULT NULL COMMENT '通证总量',
+  `token_supply` int(10) DEFAULT NULL COMMENT '通证总量',
   `token_creator` varchar(42) DEFAULT NULL COMMENT '通证的拥有者或者管理者',
-  `decimals` tinyint(4) DEFAULT '16' COMMENT '通证小数位置，默认使用以太坊的1e-16',
+  `token_decimals` tinyint(4) DEFAULT '16' COMMENT '通证小数位置，默认使用以太坊的1e-16',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='作品通证';
