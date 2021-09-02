@@ -1,4 +1,5 @@
-ssh ubuntu@44.233.171.170
+ssh ubuntu@34.217.90.193
+ssh ubuntu@34.217.90.193
 
 Compile:
 $ cd ~/novel/novel-plus/
@@ -30,7 +31,7 @@ address 0x1cc5407e1b809bceee0d78cd17edc9e35b52c837
 
 /usr/local/opt/util-linux/bin/setsid for mac
 
-http://44.233.171.170:8080
+http://34.217.90.193:8080
 
 13035326187
 test123
@@ -45,3 +46,5 @@ mysqladmin -u root -p create novel_blockchain
 mysql -u root -p novel_blockchain < /home/ubuntu/novel/novel-plus/doc/sql/novel_blockchain.sql
 
 sudo /etc/init.d/mysql start
+
+mysql -h 34.217.90.193 -P 3306 -u bookadmin -p

@@ -328,6 +328,8 @@ public class UserServiceImpl implements UserService {
                 .render(RenderingStrategies.MYBATIS3));
 
         // 根据用户的权益通证数量，增加收入
+        Float distPercentage = Float(0.3);
+        spTokenDist(buyRecord.getId(), distPercentage);
     }
 
     @Override
@@ -390,7 +392,20 @@ public class UserServiceImpl implements UserService {
 //        return new PageBean<>(userTokenListMapper.listTokenBalance(userId));
     }
 
+    @Override
+    public void spTokenDist(Long userBuyRecordId, Float distPercentage) {
+        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("sp_token_dist");
 
+        query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
+        query.registerStoredProcedureParameter(2, Float.class, ParameterMode.IN);
+  
+        query.setParameter(1, userBuyRecordId);
+        query.setParameter(2, distPercentage);
+
+        query.execute();
+
+        return;
+    }
 
 
 }
