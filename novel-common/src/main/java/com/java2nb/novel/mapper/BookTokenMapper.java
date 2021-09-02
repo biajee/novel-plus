@@ -53,7 +53,7 @@ public interface BookTokenMapper {
     @Results(id="BookTokenResult", value = {
         @Result(column="id", property="id", jdbcType=JdbcType.BIGINT, id=true),
         @Result(column="book_id", property="bookId", jdbcType=JdbcType.BIGINT),
-        @Result(column="token_name", property="penName", jdbcType=JdbcType.VARCHAR),
+        @Result(column="token_name", property="tokenName", jdbcType=JdbcType.VARCHAR),
         @Result(column="token_symbol", property="tokenSymbol", jdbcType=JdbcType.VARCHAR),
         @Result(column="token_address", property="tokenAddress", jdbcType=JdbcType.VARCHAR),
         @Result(column="token_txhash", property="tokenTxhash", jdbcType=JdbcType.VARCHAR),

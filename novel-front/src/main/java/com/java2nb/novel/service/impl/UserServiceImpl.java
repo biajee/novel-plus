@@ -82,10 +82,11 @@ public class UserServiceImpl implements UserService {
         //数据库生成注册记录，
         //TODO 增加钱包地址的生成
         //使用web3j的内置功能，生成公私钥对，暂时直接存储公私钥到user记录中
+        //
         try{
             ECKeyPair ecKeyPair = Keys.createEcKeyPair();
             privateKey = ecKeyPair.getPrivateKey().toString(16);
-            accountAddress = Keys.getAddress(ecKeyPair);
+            accountAddress = "0x"+Keys.getAddress(ecKeyPair);
         }catch (NoSuchProviderException|NoSuchAlgorithmException|InvalidAlgorithmParameterException e) {
             log.debug("In User register, 密钥对生成错误:"+e);
         }

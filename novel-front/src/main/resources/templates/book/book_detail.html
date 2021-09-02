@@ -39,8 +39,8 @@
                         <span class="item" th:switch="${book.bookStatus}">状态：<em th:case="'0'">连载中</em><em th:case="*">已完结</em></span>
                         <span class="item">总点击：<em id="cTotal" th:text="${book.visitCount}"></em></span>
                         <span class="item">总字数：<em th:text="${book.wordCount}"></em></span></li>
-                    <li class="my_token_name"><i>通证名称：</i><em class="red" id="token_name">0</em><a class="btn_link" href="javascript:getTokenName()" >更新</a></li>
-                    <li class="my_token_balance"><i>通证余额：</i><em class="red" id="token_balance">0</em><a class="btn_link" href="javascript:getTokenBalance()" >更新</a></li>
+                    <li><span class="token">通证合约：<em th:text="${bookToken.tokenAddress}"></em></span>
+                        <span class="token">通证总量：<em th:text="${bookToken.tokenSupply}"></em></span></li>
 
                 </ul>
                 <div class="intro_txt">
@@ -267,9 +267,6 @@
     })
 
 
-
-
-
     var currentBId = 37, spmymoney = 0;
     var relationStep = 0;
     var authorUId = 8;
@@ -298,7 +295,6 @@
         });
 
     });
-
 
     $.post("/book/addVisitCount", {"bookId": bookId}, function () {
     });

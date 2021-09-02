@@ -28,6 +28,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author 11797
+ * 控制页面生成
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -116,6 +117,13 @@ public class PageController extends BaseController {
             log.debug("加载小说基本信息线程结束");
             return book;
         }, threadPoolExecutor);
+        //加载小说通证基本信息线程
+        CompletableFuture<BookToken> bookTokenCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            //查询作品通证信息
+            BookToken bookToken = bookService.queryBookTokenDetail(bookId);
+            log.debug("加载小说基本信息线程结束");
+            return bookToken;
+        }, threadPoolExecutor);
         //加载小说评论列表线程
         CompletableFuture<PageBean<BookCommentVO>> bookCommentPageBeanCompletableFuture = CompletableFuture.supplyAsync(() -> {
             PageBean<BookCommentVO> bookCommentVOPageBean = bookService.listCommentByPage(null, bookId, 1, 5);
@@ -139,8 +147,9 @@ public class PageController extends BaseController {
             return books;
         }, threadPoolExecutor);
 
-
+        // 增加作品通证信息 bookToken
         model.addAttribute("book", bookCompletableFuture.get());
+        model.addAttribute("bookToken", bookTokenCompletableFuture.get());
         model.addAttribute("firstBookIndexId", firstBookIndexIdCompletableFuture.get());
         model.addAttribute("recBooks", recBookCompletableFuture.get());
         model.addAttribute("bookCommentPageBean", bookCommentPageBeanCompletableFuture.get());
