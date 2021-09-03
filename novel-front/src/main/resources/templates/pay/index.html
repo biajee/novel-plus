@@ -101,12 +101,16 @@
 
         var payType = $("#ulPayType").find("li.on").attr("valp");
 
-console.log("Pay amount:", $(this).attr("vals"));
+        console.log("Pay amount:", $(this).attr("vals"));
         // 调用区块链支付
         //if(payType == 3){
              //layer.alert("墨客支付暂未开通，敬请期待");
              //return ;
         //}
+        if(payType == 2){
+            layer.alert("mou h支付暂未开通，敬请期待");
+            return ;
+        }
 
         $("#pValue").val($(this).attr("vals"));
 
@@ -123,8 +127,8 @@ console.log("Pay amount:", $(this).attr("vals"));
             dataType: "json",
             success: function (data) {
                 if (data.code == 200) {
-                  $("#accountBalanceOnChain").html(data.data);
-console.log("data.data:", data.data);
+                    $("#accountBalanceOnChain").html(data.data);
+                    console.log("data.data:", data.data);
 
                 } else if(data.code == 1001){
                     //未登录
