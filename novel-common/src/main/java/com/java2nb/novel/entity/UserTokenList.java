@@ -13,17 +13,18 @@ public class UserTokenList {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private Long bookId;
 
-    @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    private String bookName;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    private String bookBlockchainAddress;
+    private String tokenName;
+
+    @Generated("org.mybatis.generator.api.MyBatisGenerator")
+    private String tokenAddress;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private Long tokenBalance;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    private Long updateBlockHeight;
+    private double tokenIncome;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private Date updateTime;
@@ -59,23 +60,23 @@ public class UserTokenList {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public String getBookName() {
-        return bookName;
+    public String getTokenName() {
+        return tokenName;
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setBookName(String inBookName) {
-        this.bookName = inBookName == null ? null : inBookName.trim();
+    public void setTokenName(String tokenName) {
+        this.tokenName = tokenName;
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public String getBlockchainAddress() {
-        return bookBlockchainAddress;
+    public String getTokenAddress() {
+        return tokenAddress;
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setBlockchainAddress(String inBlockchainAddress) {
-        this.bookBlockchainAddress = inBlockchainAddress == null ? null : inBlockchainAddress.trim();
+    public void setTokenAddress(String tokenAddress) {
+        this.tokenAddress = tokenAddress;
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
@@ -89,15 +90,14 @@ public class UserTokenList {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public Long getUpdateBlockHeight() {
-        return updateBlockHeight;
+    public double getTokenIncome() {
+        return tokenIncome;
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setUpdateBlockHeight(Long inBlockHeight) {
-        this.updateBlockHeight = inBlockHeight;
+    public void setTokenIncome(double tokenIncome) {
+        this.tokenIncome = tokenIncome;
     }
-
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     public Date getUpdateTime() {

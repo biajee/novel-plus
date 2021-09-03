@@ -72,20 +72,19 @@
                             var token = tokenList[i];
                             tokenListHtml+=(" <tr class=\"book_list\" vals=\"291\">\n" +
                                 "                            <td class=\"name bookclass\">\n" +
-                                "                                <a href=\"/book/bookclass.html?c="+token.bookName+"\" >["+token.bookName+"]</a>\n" +
+                                "                                <a href=\"/book/"+token.bookId+".html\" >"+token.tokenName+"</a>\n" +
                                 "                            </td>\n" +
-                                "                            <td class=\"token_balance\">\n" +
-                                "                                <a href=\"/book/"+token.tokenBalance+".html\">\n" +
-                                "                            "+token.tokenBalance+"</a>\n" +
+                                "                            <td class=\"balance\">\n" +
+                                "                            "+token.tokenBalance+"\n" +
                                 "                            </td>\n" +
                                 "                            <td class=\"token_address\" valsc=\"291|2037554|1\">\n" +
-                                "<a href='/token/"+token.bookId+"/"+token.blockchainAddress+".html'>"+token.blockchainAddress+"</a>"+
+                                "<a href='/token/"+token.bookId+".html'>"+token.tokenAddress+"</a>"+
                                 "                            </td>\n" +
                                 "                            <td class=\"time\">\n" +
                                 "                            "+new Date(Date.parse(token.updateTime)).Format("yyyy-MM-dd hh:mm")+"\n" +
                                 "                            </td>\n" +
                                 "                            <td class=\"token_details\">\n" +
-                                "<a href='/token/"+token.bookId+"/"+token.blockchainAddress+".html'>通证收入</a>"+
+                                "<a href='/token/"+token.bookId+"/"+token.tokenAddress+".html'>通证收入</a>"+
                                 "                            </td>\n" +
                                 "                        </tr>");
                         }

@@ -72,22 +72,26 @@ INSERT INTO `book_token` VALUES ('2', '1423443050795876353','另一种历史', '
 -- ----------------------------
 -- Table structure for user_token_list
 -- 显示用户所拥有的通证列表
+-- 通证名称，需要与小说名相同
+-- 增加了记录通证收入的token_income
 -- ----------------------------
 DROP TABLE IF EXISTS `user_token_list`;
 CREATE TABLE `user_token_list` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `user_id` bigint(20) NOT NULL COMMENT '用户ID',
   `book_id` bigint(20) NOT NULL COMMENT '小说ID',
+  `token_name` varchar(50) NOT NULL COMMENT '通证名称',
   `token_address` varchar(42) DEFAULT NULL COMMENT '作品区块链合约地址0x开头',
   `token_balance` bigint(20) DEFAULT NULL COMMENT '作品区块链合约通证数量',
+  `token_income` double DEFAULT 0 COMMENT '作品区块链合约通证的收入',
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `key_uq_userid_bookid` (`user_id`,`book_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='用户通证列表';
 
-INSERT INTO `user_token_list` VALUES ('11', '1413956884249956352','1414650094664269824','0xe592303d955ca9c515a7d62f374cf46cbeb42dfb','101','2021-07-14 10:53:51');
-INSERT INTO `user_token_list` VALUES ('12', '1413956884249956352','1414653690969579520','0x03afc7ca5b56434ebcf8f03eb80f9c52d6b36fed','102', '2021-07-15 10:53:51');
-INSERT INTO `user_token_list` VALUES ('13', '1413956884249956352','1414653961212780544','0x48b106f4bf30f9ef83557141341c060e6d954e19','103', '2021-07-12 08:52:37');
+INSERT INTO `user_token_list` VALUES ('11', '1413956884249956352','1423443050795876353','另一种历史','0xe592303d955ca9c515a7d62f374cf46cbeb42dfb','101','0','2021-07-14 10:53:51');
+INSERT INTO `user_token_list` VALUES ('12', '1413956884249956352','1423443050795876354','弘略演绎','0x03afc7ca5b56434ebcf8f03eb80f9c52d6b36fed','102','0', '2021-07-15 10:53:51');
+INSERT INTO `user_token_list` VALUES ('13', '1413956884249956352','1414653961212780544','临高启明','0x48b106f4bf30f9ef83557141341c060e6d954e19','103','0', '2021-07-12 08:52:37');
 
 -- ----------------------------
 -- Table structure for token_tx_list
