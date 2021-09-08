@@ -48,7 +48,8 @@ public final class UserTokenListDynamicSqlSupport {
         public final SqlColumn<String> tokenAddress = column("token_address", JDBCType.VARCHAR);
 
         public final SqlColumn<Long> tokenBalance = column("token_balance", JDBCType.BIGINT);
-        public final SqlColumn<Long> tokenIncome = column("token_income", JDBCType.DOUBLE);
+
+        public final SqlColumn<Long> tokenIncome = column("token_income", JDBCType.BIGINT);
 
         public final SqlColumn<Date> updateTime = column("update_time", JDBCType.TIMESTAMP);
 

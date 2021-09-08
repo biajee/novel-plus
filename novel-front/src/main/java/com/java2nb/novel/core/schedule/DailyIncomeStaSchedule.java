@@ -36,6 +36,7 @@ public class DailyIncomeStaSchedule {
 
     /**
      * 每天凌晨0点统计上一天数据
+     * TODO 对应区块链，可能要修改为按区块链数目的统计
      */
     @Scheduled(cron = "0 0 0 * * ?")
     public void statistics() {

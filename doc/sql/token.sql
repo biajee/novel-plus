@@ -83,15 +83,19 @@ CREATE TABLE `user_token_list` (
   `token_name` varchar(50) NOT NULL COMMENT '通证名称',
   `token_address` varchar(42) DEFAULT NULL COMMENT '作品区块链合约地址0x开头',
   `token_balance` bigint(20) DEFAULT NULL COMMENT '作品区块链合约通证数量',
-  `token_income` double DEFAULT 0 COMMENT '作品区块链合约通证的收入',
+  `token_income` bigint(20) DEFAULT 0 COMMENT '作品区块链合约通证的收入，单位为分',
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `key_uq_userid_bookid` (`user_id`,`book_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='用户通证列表';
 
-INSERT INTO `user_token_list` VALUES ('11', '1413956884249956352','1423443050795876353','另一种历史','0xe592303d955ca9c515a7d62f374cf46cbeb42dfb','101','0','2021-07-14 10:53:51');
-INSERT INTO `user_token_list` VALUES ('12', '1413956884249956352','1423443050795876354','弘略演绎','0x03afc7ca5b56434ebcf8f03eb80f9c52d6b36fed','102','0', '2021-07-15 10:53:51');
-INSERT INTO `user_token_list` VALUES ('13', '1413956884249956352','1414653961212780544','临高启明','0x48b106f4bf30f9ef83557141341c060e6d954e19','103','0', '2021-07-12 08:52:37');
+INSERT INTO `user_token_list` VALUES ('8', '1423713850367029248','1423443050795876353','另一种历史','0xe592303d955ca9c515a7d62f374cf46cbeb42dfb','100','1000','2021-08-1 10:53:51');
+INSERT INTO `user_token_list` VALUES ('9', '1423713850367029248','1423443050795876354','弘略演绎','0x03afc7ca5b56434ebcf8f03eb80f9c52d6b36fed','10','1000', '2021-08-15 10:53:51');
+INSERT INTO `user_token_list` VALUES ('10', '1423713850367029248','1414653961212780544','临高启明','0x48b106f4bf30f9ef83557141341c060e6d954e19','20','2000', '2021-08-12 08:52:37');
+
+INSERT INTO `user_token_list` VALUES ('11', '1413956884249956352','1423443050795876353','另一种历史','0xe592303d955ca9c515a7d62f374cf46cbeb42dfb','1000','510','2021-07-14 10:53:51');
+INSERT INTO `user_token_list` VALUES ('12', '1413956884249956352','1423443050795876354','弘略演绎','0x03afc7ca5b56434ebcf8f03eb80f9c52d6b36fed','100','100', '2021-07-15 10:53:51');
+INSERT INTO `user_token_list` VALUES ('13', '1413956884249956352','1414653961212780544','临高启明','0x48b106f4bf30f9ef83557141341c060e6d954e19','200','2000', '2021-07-12 08:52:37');
 
 -- ----------------------------
 -- Table structure for token_tx_list
@@ -116,3 +120,21 @@ CREATE TABLE `token_tx_list` (
 -- Records of token_tx_list
 -- ----------------------------
 INSERT INTO `token_tx_list` VALUES ('1', '0xe6beb4e09e64c0f61ef639944ef97e0ca9a069a7', '0xa8cae136204e546d58fe9f81eb14e0e7321fc428395a49c2ef5c3c8123c273ca', '7655', '2020-05-27 22:43:45', '0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b', '0xa8863fc8ce3816411378685223c03daae9770ebb','1.0');
+
+-- ----------------------------
+-- Table structure for user_income
+-- 显示读者所阅读的作品全部收入
+--
+-- ???
+-- ----------------------------
+CREATE TABLE `user_income_detail` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `book_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '作品ID,0表示全部作品',
+  `token_address` varchar(42) DEFAULT NULL COMMENT '通证合约地址',
+  `income_account` int(11) NOT NULL DEFAULT '0' COMMENT '订阅总额',
+  `income_count` int(11) NOT NULL DEFAULT '0' COMMENT '订阅次数',
+  `income_number` int(11) NOT NULL DEFAULT '0' COMMENT '订阅人数',
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='稿费收入明细统计表';

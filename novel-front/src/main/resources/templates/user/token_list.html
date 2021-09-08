@@ -13,7 +13,7 @@
         <div class="viewhistoryBox">
             <div class="my_tokenlist">
                 <div class="title cf">
-                    <h2 class="fl ml10"><a href="javascript:void(0);" class="red">通证列表</a></h2><i class="fl ml20 mr20 font16">|</i><h2 class="fl"><a href="javascript:void(0);" class="red">我的书架</a></h2><i class="fl ml20 mr20 font16">|</i><h2 class="fl"><a href="/user/read_history.html" >最近阅读</a></h2>
+                    <h2 class="fl ml10"><a href="javascript:void(0);" class="red">通证列表</a></h2><i class="fl ml20 mr20 font16">|</i><h2 class="fl"><a a href="/user/favorites.html">我的书架</a></h2><i class="fl ml20 mr20 font16">|</i><h2 class="fl"><a href="/user/read_history.html" >最近阅读</a></h2>
                 </div>
                 <div id="divData" class="updateTable">
                     <table cellpadding="0" cellspacing="0">
@@ -28,11 +28,11 @@
                             <th class="token_address">
                                 通证地址
                             </th>
+                            <th class="token_income">
+                                通证收入
+                            </th>
                             <th class="time">
                                 更新时间
-                            </th>
-                            <th class="token_details">
-                                通证收入
                             </th>
                         </tr>
                         </thead>
@@ -66,6 +66,7 @@
             success: function (data) {
                 if (data.code == 200) {
                     var tokenList = data.data.list;
+                    console.log("Token List:", tokenList[0]);
                     if (tokenList.length > 0) {
                         var tokenListHtml = "";
                         for(var i=0;i<tokenList.length;i++){
@@ -77,19 +78,19 @@
                                 "                            <td class=\"balance\">\n" +
                                 "                            "+token.tokenBalance+"\n" +
                                 "                            </td>\n" +
-                                "                            <td class=\"token_address\" valsc=\"291|2037554|1\">\n" +
+                                "                            <td class=\"token_address\">\n" +
                                 "<a href='/token/"+token.bookId+".html'>"+token.tokenAddress+"</a>"+
+                                "                            </td>\n" +
+                                "                            <td class=\"token_income\">\n" +
+                                "<a href='/token/"+token.bookId+".html'>"+token.tokenIncome+"</a>"+
                                 "                            </td>\n" +
                                 "                            <td class=\"time\">\n" +
                                 "                            "+new Date(Date.parse(token.updateTime)).Format("yyyy-MM-dd hh:mm")+"\n" +
                                 "                            </td>\n" +
-                                "                            <td class=\"token_details\">\n" +
-                                "<a href='/token/"+token.bookId+"/"+token.tokenAddress+".html'>通证收入</a>"+
-                                "                            </td>\n" +
                                 "                        </tr>");
                         }
                         $("#tokenList").html(tokenListHtml);
-
+// valsc=\"291|2037554|1\"
                         layui.use('laypage', function () {
                             var laypage = layui.laypage;
 

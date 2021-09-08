@@ -3,6 +3,9 @@ package com.java2nb.novel.entity;
 import javax.annotation.Generated;
 import java.util.Date;
 
+/*
+ * change token_income from double to Long
+ */
 public class UserTokenList {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private Long id;
@@ -24,7 +27,7 @@ public class UserTokenList {
     private Long tokenBalance;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    private double tokenIncome;
+    private Long tokenIncome;
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
     private Date updateTime;
@@ -90,12 +93,12 @@ public class UserTokenList {
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public double getTokenIncome() {
+    public Long getTokenIncome() {
         return tokenIncome;
     }
 
     @Generated("org.mybatis.generator.api.MyBatisGenerator")
-    public void setTokenIncome(double tokenIncome) {
+    public void setTokenIncome(Long tokenIncome) {
         this.tokenIncome = tokenIncome;
     }
 

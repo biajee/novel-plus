@@ -204,7 +204,7 @@ public interface UserMapper {
             c.set(username).equalTo(record::getUsername)
             .set(password).equalTo(record::getPassword)
             .set(nickName).equalTo(record::getNickName)
-                    .set(blockchainAddress).equalTo(record::getBlockchainAddress)
+            .set(blockchainAddress).equalTo(record::getBlockchainAddress)
             .set(userPhoto).equalTo(record::getUserPhoto)
             .set(userSex).equalTo(record::getUserSex)
             .set(accountBalance).equalTo(record::getAccountBalance)

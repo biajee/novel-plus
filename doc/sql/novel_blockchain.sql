@@ -1578,8 +1578,11 @@ CREATE TABLE `user_buy_record` (
 -- ----------------------------
 -- Records of user_buy_record
 -- ----------------------------
-INSERT INTO `user_buy_record` VALUES ('1', '1255060328322027520', '1260400284744613890', '大国游戏', '1260522024606953472', '第三章', '10', 'null', '0','2020-05-13 21:29:09');
-INSERT INTO `user_buy_record` VALUES ('2', '1255060328322027520', '1260400284744613890', '大国游戏', '1260564410687107072', '第四章', '10', 'null', '0','2020-05-13 21:40:38');
+INSERT INTO `user_buy_record` VALUES ('1', '1255060328322027520', '1260400284744613890', '大国游戏', '1260522024606953472', '第三章', '10', '100', '0','2020-05-13 21:29:09');
+INSERT INTO `user_buy_record` VALUES ('2', '1255060328322027520', '1260400284744613890', '大国游戏', '1260564410687107072', '第四章', '10', '100', '0','2020-05-13 21:40:38');
+INSERT INTO `user_buy_record` VALUES ('10', '1255060328322027520', '1423443050795876354', '弘略演绎', '1423765233032101888', '第三章', '22', '220', '2021-09-07 23:14:29');
+INSERT INTO `user_buy_record` VALUES ('11', '1433425906917912576', '1423443050795876354', '弘略演绎', '1423765233032101888', '第三章', '22', '220', '2021-09-07 23:14:29');
+
 
 -- ----------------------------
 -- Table structure for user_feedback
@@ -1781,7 +1784,12 @@ INSERT INTO `friend_link` ( `link_name`, `link_url`, `sort`, `is_open`, `create_
 ('小羊影视', 'http://video.java2nb.com/', 11, 1, NULL, NULL, NULL, NULL),
 ('官方论坛', 'http://bbs.java2nb.com', 21, 1, NULL, NULL, NULL, NULL);
 
-
+-- ----------------------------
+-- Table structure for author_income
+-- 显示作者所拥有的作品全部收入
+--
+-- 需要增加了记录通证收入的income_dividend
+-- ----------------------------
 CREATE TABLE `author_income_detail` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `user_id` bigint(20) NOT NULL COMMENT '用户ID',
@@ -1795,6 +1803,14 @@ CREATE TABLE `author_income_detail` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='稿费收入明细统计表';
 
+INSERT INTO `author_income_detail` VALUES ('1', '1413956884249956352', '3', '1423443050795876353', '2020-05-27', '500', '100','100','2020-05-28 02:43:45');
+
+-- ----------------------------
+-- Table structure for author_income
+-- 显示作者所拥有的作品全部收入
+--
+-- 需要增加了记录通证收入的income_dividend
+-- ----------------------------
 CREATE TABLE `author_income` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `user_id` bigint(20) NOT NULL COMMENT '用户ID',
@@ -1809,6 +1825,8 @@ CREATE TABLE `author_income` (
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4  COMMENT='稿费收入统计表';
+
+INSERT INTO `author_income` VALUES ('1', '1413956884249956352', '3', '1423443050795876353', '2020-05-01', '50000', '40000','0','0','测试数据01','2020-05-28 02:43:45');
 
 
 alter table book add column `yesterday_buy` int(11) DEFAULT '0' COMMENT '昨日订阅数' after comment_count;

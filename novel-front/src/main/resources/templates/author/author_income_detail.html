@@ -121,7 +121,7 @@
         if(bookId){
             data.bookId = bookId;
         }
-
+console.log("author income detail data:", data);
         $.ajax({
             type: "get",
             url: "/author/listIncomeDailyByPage",

@@ -37,6 +37,7 @@ import static com.java2nb.novel.mapper.UserBookshelfDynamicSqlSupport.userBooksh
 import static com.java2nb.novel.mapper.UserDynamicSqlSupport.*;
 import static com.java2nb.novel.mapper.UserFeedbackDynamicSqlSupport.userFeedback;
 import static com.java2nb.novel.mapper.UserReadHistoryDynamicSqlSupport.userReadHistory;
+import static com.java2nb.novel.mapper.UserTokenListDynamicSqlSupport.bookId;
 import static com.java2nb.novel.mapper.UserTokenListDynamicSqlSupport.userTokenList;
 import static org.mybatis.dynamic.sql.SqlBuilder.*;
 import static org.mybatis.dynamic.sql.select.SelectDSL.select;
@@ -319,17 +320,43 @@ public class UserServiceImpl implements UserService {
         //生成购买记录
         userBuyRecordMapper.insertSelective(buyRecord);
 
+        // 根据用户的权益通证数量，分配额外的收入红利给通证持有者
+        // 这会影响用户的accountBalance.
+//        Float distPercentage = Float(0.3);
+//        spTokenDist(buyRecord.getId(), distPercentage);
+
+
+        // 计算用户获取的收益，
+        int userTokenNum = queryUserTokenCount(buyRecord.getBookId(), buyRecord.getUserId());
+        int totalTokenNum = queryBookTokenCount(buyRecord.getBookId());
+        log.debug(("buyBookIndex:"+userTokenNum+" : "+totalTokenNum+" amount: "+buyRecord.getBuyAmount()));
+        int tokenRewards = buyRecord.getBuyAmount()  * userTokenNum / totalTokenNum;
+        // 计算用户余额的变化，加入tokenRewards
+        long finalBalance = balance - buyRecord.getBuyAmount() + tokenRewards;
+        log.debug(("buyBookIndex: rewards"+tokenRewards+" :finalBalance"+finalBalance));
+
+
         //减少用户余额
         userMapper.update(update(user)
                 .set(UserDynamicSqlSupport.accountBalance)
-                .equalTo(balance-buyRecord.getBuyAmount())
+                .equalTo(finalBalance)
                 .where(id,isEqualTo(userId))
                 .build()
                 .render(RenderingStrategies.MYBATIS3));
 
-        // 根据用户的权益通证数量，增加收入
-        Float distPercentage = Float(0.3);
-        spTokenDist(buyRecord.getId(), distPercentage);
+        // 修改相应用户和作品通证的收入
+        // 选择对应作品的通证
+        SelectStatementProvider selectStatement = select(UserTokenListDynamicSqlSupport.bookId,UserTokenListDynamicSqlSupport.tokenName,UserTokenListDynamicSqlSupport.tokenIncome, UserTokenListDynamicSqlSupport.updateTime)
+                .from(userTokenList)
+                .where(UserTokenListDynamicSqlSupport.userId, isEqualTo(userId))
+                .and(UserTokenListDynamicSqlSupport.bookId, isEqualTo(buyRecord.getBookId()))
+                .build()
+                .render(RenderingStrategies.MYBATIS3);
+
+        UserTokenList userTokenList = this.userTokenListMapper.selectOne(selectStatement);
+        log.info("buyBookIndex: update record:"+userTokenList.getTokenIncome()+" with tokenRewards:"+tokenRewards);
+        updateUserTokenIncomeInfo(userId, userTokenList, new Long(tokenRewards)+userTokenList.getTokenIncome());
+        // TODO，更新更多账户的信息
     }
 
     @Override
@@ -378,34 +405,73 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageBean<UserTokenList> listTokenBalanceByPage(Long userId, int page, int pageSize) {
+        log.debug("listTokenBalanceByPage userID:"+userId);
         PageHelper.startPage(page, pageSize);
-    SelectStatementProvider selectStatement = select(UserTokenListDynamicSqlSupport.bookId,UserTokenListDynamicSqlSupport.tokenName,UserTokenListDynamicSqlSupport.tokenAddress, UserTokenListDynamicSqlSupport.tokenBalance, UserTokenListDynamicSqlSupport.updateTime)
+        SelectStatementProvider selectStatement = select(UserTokenListDynamicSqlSupport.bookId,UserTokenListDynamicSqlSupport.tokenName,UserTokenListDynamicSqlSupport.tokenAddress, UserTokenListDynamicSqlSupport.tokenBalance, UserTokenListDynamicSqlSupport.tokenIncome, UserTokenListDynamicSqlSupport.updateTime)
             .from(userTokenList)
             .where(UserTokenListDynamicSqlSupport.userId, isEqualTo(userId))
             .orderBy(UserTokenListDynamicSqlSupport.id.descending())
             .build()
             .render(RenderingStrategies.MYBATIS3);
-    List<UserTokenList> userTokenLists = userTokenListMapper.selectMany(selectStatement);
-    PageBean<UserTokenList> pageBean = new PageBean<>(userTokenLists);
-//        pageBean.setList(BeanUtil.copyList(userFeedbacks,UserFeedbackVO.class));
+        List<UserTokenList> userTokenLists = userTokenListMapper.selectMany(selectStatement);
+        PageBean<UserTokenList> pageBean = new PageBean<>(userTokenLists);
         return pageBean;
-//        return new PageBean<>(userTokenListMapper.listTokenBalance(userId));
     }
 
-    @Override
-    public void spTokenDist(Long userBuyRecordId, Float distPercentage) {
-        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("sp_token_dist");
-
-        query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
-        query.registerStoredProcedureParameter(2, Float.class, ParameterMode.IN);
-  
-        query.setParameter(1, userBuyRecordId);
-        query.setParameter(2, distPercentage);
-
-        query.execute();
-
-        return;
+    // Return the number of book tokens current user owned
+    // count from the buy_amount
+    public int queryUserTokenCount(Long bookId, Long userId) {
+        return userMapper.selectStatistic(select(sum(UserBuyRecordDynamicSqlSupport.buyAmount))
+                .from(UserBuyRecordDynamicSqlSupport.userBuyRecord)
+                .where(UserBuyRecordDynamicSqlSupport.bookId,isEqualTo(bookId))
+                .and(UserBuyRecordDynamicSqlSupport.userId,isEqualTo(userId))
+                .build()
+                .render(RenderingStrategies.MYBATIS3));
     }
+
+    // Return the number of book tokens current distributed
+    // count from the buy_amount
+    public int queryBookTokenCount(Long bookId) {
+        return userMapper.selectStatistic(select(sum(UserBuyRecordDynamicSqlSupport.buyAmount))
+                .from(UserBuyRecordDynamicSqlSupport.userBuyRecord)
+                .where(UserBuyRecordDynamicSqlSupport.bookId,isEqualTo(bookId))
+                .build()
+                .render(RenderingStrategies.MYBATIS3));
+    }
+
+//    public UserTokenList userTokenListInfo(Long userId, Long bookId) {
+//        SelectStatementProvider selectStatement = select(username, nickName, blockchainAddress, userPhoto,userSex,accountBalance)
+//                .from(user)
+//                .where(id, isEqualTo(userId))
+//                .build()
+//                .render(RenderingStrategies.MYBATIS3);
+//        return userMapper.selectMany(selectStatement).get(0);
+//    }
+
+    // Added the token reward income to the userTokenList
+    // and update the UpdateTime
+    public void updateUserTokenIncomeInfo(Long userId, UserTokenList userTokenList, Long tokenIncome) {
+        log.debug("updateUserTokenIncomeInfo userID:"+userId+" income: "+tokenIncome);
+        userTokenList.setId(userId);
+        userTokenList.setTokenIncome(tokenIncome);
+        userTokenList.setUpdateTime(new Date());
+        userTokenListMapper.updateByPrimaryKeySelective(userTokenList);
+    }
+
+//    @Override
+//    public void spTokenDist(Long userBuyRecordId, Float distPercentage) {
+//        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("sp_token_dist");
+//
+//        query.registerStoredProcedureParameter(1, Long.class, ParameterMode.IN);
+//        query.registerStoredProcedureParameter(2, Float.class, ParameterMode.IN);
+//
+//        query.setParameter(1, userBuyRecordId);
+//        query.setParameter(2, distPercentage);
+//
+//        query.execute();
+//
+//        return;
+//    }
 
 
 }
