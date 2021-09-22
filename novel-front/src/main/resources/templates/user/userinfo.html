@@ -36,12 +36,13 @@
                         <li class="token_tx_test"><i>通证地址：</i><input type="text" id="input_token_address" value="0xe6beb4e09e64c0f61ef639944ef97e0ca9a069a7"><a class="btn_link" href="javascript:getInputTokenInfo()" >获取账户通证信息</a></li>
                         <li class="token_tx_test"><i>通证名称：</i><em class="red" id="input_token_name">null</em><i>通证余额：</i><em class="red" id="input_token_balance">0</em></li>
                     </ul>
-                    <p>------------测试地址-------------------------------</p>
-                    <h3>测试发送地址：0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b</h3>
                     <p>------------原生币转移测试-------------------------------</p>
                     <ul calss="tx_test">
-                        <li class="tx_test"><i>原生币账户余额：</i><em class="red" id="test_account_balance">0</em><a class="btn_link" href="javascript:getTestAccountBalance()" >更新</a></li>
-                        <li class="tx_test"><i>转移原生币数量：</i><input type="number" id="tx_value" value="1.0"><a class="btn_link" href="javascript:payWithBlockchain()" >测试</a></li>
+                        <li class="tx_test"><i>接收方账户地址：</i><input type="text" id="to_addrress" value="0x7312F4B8A4457a36827f185325Fd6B66a3f8BB8B"></li>
+                        <li class="tx_test"><i>接收方账户余额：</i><em class="red" id="test_account_balance">0</em><a class="btn_link" href="javascript:getTestAccountBalance()" >更新</a></li>
+                        <li class="tx_test"><i>转移原生币数量：</i><input type="number" id="tx_value" value="1.0"><a class="btn_link" href="javascript:payWithBlockchain()" >转移</a></li>
+                        <li class="tx_test"><i>交易密码：</i><input type="text" id="src_password" value="111111"><a class="btn_link" href="javascript:getAccountPrivateKey()" >显示账户私钥</a></li>
+                        <li class="tx_test"><i>账户私钥：</i><em class="red" id="src_private_key">0x</em></li>
                         <li class="tx_test"><i>交易HASH：</i><em class="red" id="tx_hash">0x</em></li>
                     </ul>
                     <p>-----------通证转移测试-------------------------------</p>
@@ -225,21 +226,20 @@ console.log("data.data:", data.data);
         tokenBalance = getTokenBalance(inputTokenAddress, userAddress)*1e-18;
         console.log("Returned token name", tname," balance:", tokenBalance);
         $("#input_token_balance").html(tokenBalance);
-        //document.getElementById("input_token_name").innerHTML=tname;
-        //$("#input_token_name").html(getTokenName(inputTokenAddress));
+
     }
 
     // Return the balance of user account
     function getMyAccountBalance(){
     console.log("getMyAccountBalance:", userAddress);
     getAccountBalanceByAddress(userAddress);
-           // $("#accountBalanceOnChain").html(getAccountBalanceByAddress(userAddress));
     }
 
+    // 显示测试账户原生币信息
     function getTestAccountBalance(){
-    bal = getAccountBalanceByAddress(testAddress);
-    console.log("getTestAccountBalance:", testAddress, "bal:", bal);
-            // $("#accountBalanceOnChain").html(bal);
+    var myAddress = document.getElementById("to_addrress").value;
+    bal = getAccountBalanceByAddress(myAddress);
+    console.log("getTestAccountBalance:", myAddress, "bal:", bal);
     }
 
     // 使用web3j直接对接区块链后台，显示用户原生通证余额
@@ -257,9 +257,6 @@ console.log("data.data:", data.data);
                     // show test account balance
                     $("#test_account_balance").html(data.data*1e-18);
                   }
-
-//console.log("getAccountBalanceByAddress:", inAccountAddress, " data:", data.data);
-//return data.data;
 
                 } else if(data.code == 1001){
                     //未登录
@@ -373,17 +370,51 @@ console.log("getSrcAccountBalance", testAddress, ".data:", data.data);
 
     }
 
+    // 测试函数，使用用户的账户名称和输入密码，解锁私钥并显示
+    function getAccountPrivateKey(){
+         var inPassword = document.getElementById("src_password").value;
+          console.log("getAccountPrivateKey with password:", inPassword);
+        $.ajax({
+            type: "GET",
+            url: "/user/getAccountPrivateKey",
+            data: {'password':inPassword},
+            dataType: "json",
+            success: function (data) {
+                if (data.code == 200) {
+                    $("#src_private_key").html(data.data);
+                    //显示交易HASH
+                    console.log("getAccountPrivateKey.data:", data.data);
+
+                } else if (data.code == 1001) {
+                    //未登录
+                    location.href = '/user/login.html?originUrl=' + decodeURIComponent(location.href);
+
+                } else {
+                    layer.alert(data.msg);
+                }
+
+            },
+            error: function () {
+                layer.alert('网络异常');
+            }
+        })
+
+    }
+
     // 使用web3j直接对接区块链后台，测试原生通证交易
     // 充值功能，默认使用用户自己的账户地址为发送地址，输入地址为目标地址
     // 将来为获取通证的过程
     // 向测试账户地址发送系统原生币
     function payWithBlockchain() {
      var txValue = document.getElementById("tx_value").value;
-     console.log("toAddress:",userAddress, " value:", txValue);
+     var inPassword = document.getElementById("src_password").value;
+     var desAddress = document.getElementById("to_addrress").value;
+
+     console.log("toAddress:",desAddress, " value:", txValue, "pass:", inPassword);
         $.ajax({
             type: "POST",
             url: "/user/payWithBlockchain",
-            data: {'toAddress': userAddress, 'value': txValue},
+            data: {'toAddress': desAddress, 'password':inPassword, 'value': txValue},
             dataType: "json",
             success: function (data) {
                 if (data.code == 200) {
@@ -413,14 +444,19 @@ console.log("getSrcAccountBalance", testAddress, ".data:", data.data);
         //Get the token info from input box
         var txValue = document.getElementById("tx_token_value").value;
         var inputTokenAddress = document.getElementById("input_token_address").value;
+        var inPassword = document.getElementById("src_password").value;
+        var desAddress = document.getElementById("to_addrress").value;
+
         console.log("payWithToken inputTokenAddress:",inputTokenAddress);
-        console.log("payWithToken toAddress:",userAddress, " value:", txValue);
+        console.log("payWithToken toAddress:",desAddress, " value:", txValue);
+
         $.ajax({
             type: "POST",
             url: "/user/payWithToken",
-            data: {'tokenAddress': inputTokenAddress,
-            'srcAddress': testAddress,
-            'toAddress': userAddress,
+            data: {
+            'toAddress': desAddress,
+            'tokenAddress': inputTokenAddress,
+            'password':inPassword,
             'value': txValue},
             dataType: "json",
             success: function (data) {

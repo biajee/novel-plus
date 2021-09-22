@@ -143,6 +143,30 @@ public interface UserService {
     void buyBookIndex(Long userId, UserBuyRecord buyRecord);
 
     /**
+     * 转移区块链的余额
+     * @param userId 用户ID
+     * @param toAddress 目标的合约地址
+     * @param amount 转移原生通证数量
+     * @param password 用户的账户密码
+     * @return txHash 交易的HASH地址，交易有不成功的可能，需要
+     *
+     * */
+    public String transferBalance(Long userId, String srcAddress, String toAddress, int amount, String password);
+
+    /**
+     * 转移通证，用户ID可以对应多个账户地址
+     * @param userId 用户ID
+     * @param srcAddress 用户的账户地址
+     * @param toAddress 目标的合约地址
+     * @param tokenAddress 通证的合约地址
+     * @param amount 通证数量
+     * @param password 用户的账户密码
+     * @return txHash 交易的HASH地址，交易有不成功的可能，需要
+     *
+     * */
+    public String transferTokenBalance(Long userId, String srcAddress, String toAddress, String tokenAddress, int amount, String password);
+
+    /**
      * 查询作品时间段内的订阅人数
      * @param bookId 作品ID
      * @param startTime 开始时间
@@ -187,4 +211,11 @@ public interface UserService {
      * */
     PageBean<UserTokenList> listTokenBalanceByPage(Long userId, int page, int pageSize);
 
+    /**
+     * 使用输入密码解锁钱包文件，并返回私钥
+     * @param userId 用户ID
+     * @param password 用户钱包密码
+     * @return privateKey
+     */
+    String getPrivateKey(Long userId,String password);
 }

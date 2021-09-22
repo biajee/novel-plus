@@ -42,11 +42,11 @@
                     <li><span class="token">通证合约：<em th:text="${bookToken.tokenAddress}"></em></span>
                         <span class="token">通证总量：<em th:text="${bookToken.tokenSupply}"></em></span></li>
                     <li><span class="token">阅读收入：<em>400000</em>书币</span>
-                        <span class="token">分红比例：<em>30</em>%</span>
-                        <span class="token">已分红收入：<em>12000</em>书币</span></li>
-                    <li><span class="token">打赏收入：<em>10000</em>书币</span>
-                        <span class="token">分红比例：<em>20</em>%</span>
-                        <span class="token">已分红收入：<em>2000</em>书币</span></li>
+                        <span class="token">分红比例：<em class="red">30</em>%</span>
+                        <span class="token">已分红收入：<em class="red">12000</em>书币</span></li>
+                    <li><span class="token">打赏收入：<em class="red">10000</em>书币</span>
+                        <span class="token">分红比例：<em class="red">20</em>%</span>
+                        <span class="token">已分红收入：<em class="red">2000</em>书币</span></li>
                 </ul>
                 <div class="intro_txt">
                     <p th:utext="${book.bookDesc}"></p>

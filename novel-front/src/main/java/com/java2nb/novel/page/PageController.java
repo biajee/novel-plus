@@ -105,7 +105,7 @@ public class PageController extends BaseController {
 
 
     /**
-     * 详情页
+     * 详情页，增加bookToken内容
      */
     @SneakyThrows
     @RequestMapping("/book/{bookId}.html")

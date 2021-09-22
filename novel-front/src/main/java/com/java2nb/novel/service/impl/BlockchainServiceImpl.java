@@ -1,5 +1,7 @@
 package com.java2nb.novel.service.impl;
 
+import com.java2nb.novel.core.bean.ResultBean;
+import com.java2nb.novel.core.enums.ResponseStatus;
 import com.java2nb.novel.service.BlockchainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -407,7 +409,7 @@ public class BlockchainServiceImpl implements BlockchainService {
             PersonalUnlockAccount personalUnlockAccount = admin.personalUnlockAccount(address, password, unlockDuration).send();
             Boolean isUnlocked = personalUnlockAccount.accountUnlocked();
 
-            System.out.println("account unlock " + isUnlocked);
+            log.info("account unlock " + isUnlocked);
             return isUnlocked;
         } catch (IOException e) {
             e.printStackTrace();
@@ -415,5 +417,33 @@ public class BlockchainServiceImpl implements BlockchainService {
         return false;
     }
 
+    /**
+     * 解锁钱包文件
+     * @param keystore 用户钱包文件的String
+     * @param password 用户钱包密码
+     * @return privateKey
+     */
+    @Override
+    public String decryptWallet(String keystore, String password) {
+        String privateKey = null;
+        ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();
+        try {
+            WalletFile walletFile = objectMapper.readValue(keystore, WalletFile.class);
+            ECKeyPair ecKeyPair = null;
+            ecKeyPair = Wallet.decrypt(password, walletFile);
+            privateKey = ecKeyPair.getPrivateKey().toString(16);
+        } catch (CipherException e) {
+            if ("Invalid password provided".equals(e.getMessage())) {
+                log.info("钱包密码错误");
+            }
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        // 返回标明为HEX
+        return "0x"+privateKey;
+    }
 
 }

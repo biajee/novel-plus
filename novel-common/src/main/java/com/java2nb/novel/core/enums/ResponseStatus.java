@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author 11797
+ * 增加区块链账户相关错误信息
  */
 
 @Getter
@@ -37,7 +38,7 @@ public enum ResponseStatus {
     /**
      * 用户相关错误
      * */
-   NO_LOGIN(1001, "未登录或登陆失效！"),
+    NO_LOGIN(1001, "未登录或登陆失效！"),
     VEL_CODE_ERROR(1002, "验证码错误！"),
     USERNAME_EXIST(1003,"该手机号已注册！"),
     USERNAME_PASS_ERROR(1004,"手机号或密码错误！"),
@@ -54,8 +55,8 @@ public enum ResponseStatus {
      * 作者相关错误
      * */
     INVITE_CODE_INVALID(4001, "邀请码无效！"),
-    AUTHOR_STATUS_FORBIDDEN(4002, "作者状态异常，暂不能管理小说！")
-    , BOOKNAME_EXISTS(4003,"已发布过同名小说！"),
+    AUTHOR_STATUS_FORBIDDEN(4002, "作者状态异常，暂不能管理小说！"),
+    BOOKNAME_EXISTS(4003,"已发布过同名小说！"),
 
     /**
      * 小说相关错误
@@ -78,7 +79,15 @@ public enum ResponseStatus {
     /**
      * 其他通用错误
      * */
-    PASSWORD_ERROR(88001,"密码错误！");
+    PASSWORD_ERROR(88001,"密码错误！"),
+
+    /**
+     * 区块链通用错误，
+     * 注意新数据之间用","分隔，最后使用";"。
+     * */
+    BLOCKCHAIN_PRIVATEKEY_ERROR( 11001, "账户私钥获取错误！"),
+    BLOCKCHAIN_ACCOUNT_ERROR(11002,"账户错误！"),
+    BLOCKCHAIN_TX_ERROR(11003,"交易错误！");
 
     private int code;
     private String msg;

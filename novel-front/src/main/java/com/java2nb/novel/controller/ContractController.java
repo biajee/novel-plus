@@ -38,7 +38,7 @@ public class ContractController {
     }
 
     /**
-     * 查询通证
+     * 查询通证价格
      * */
 
     /**

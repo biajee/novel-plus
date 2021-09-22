@@ -4,7 +4,8 @@ import javax.annotation.Generated;
 import java.util.Date;
 
 /*
- * change token_income from double to Long
+ * 用于记录用户所用于的
+ * 2021/09/08 change token_income from double to Long
  */
 public class UserTokenList {
     @Generated("org.mybatis.generator.api.MyBatisGenerator")

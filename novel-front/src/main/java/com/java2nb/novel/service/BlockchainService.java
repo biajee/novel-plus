@@ -80,4 +80,12 @@ public interface BlockchainService {
      * @return 交易的HASH值
      * */
     String transferBookToken(String bookTokenAddress, String fromUserAddress, String toUserAddress, double amount, String privateKey);
+
+    /**
+     * 解锁钱包文件
+     * @param keystore 用户钱包文件的String
+     * @param password 用户钱包密码
+     * @return privateKey
+     */
+    String decryptWallet(String keystore, String password);
 }

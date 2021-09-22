@@ -534,7 +534,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void addBook(Book book, Long authorId, String penName) {
         //判断小说名是否存在
-        //需要再次判断小说相关的区块链地址账户
+
         if (queryIdByNameAndAuthor(book.getBookName(), penName) != null) {
             //该作者发布过此书名的小说
             throw new BusinessException(ResponseStatus.BOOKNAME_EXISTS);

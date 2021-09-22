@@ -39,6 +39,7 @@ public class UserController extends BaseController {
     private final BookService bookService;
 
     private final BlockchainService blockchainService;
+
     /**
      * 登陆
      */
@@ -315,20 +316,39 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 使用原生币支付
-     * 返回交易HASH
+     * 查询用户区块链账户私钥，本函数仅用于调试账户操作
+     * tokenAddress: 作品合约的地址
+     * accountAddress: 用户区块链账户地址
      * */
-    @PostMapping("payWithBlockchain")
-    public ResultBean payWithBlockchain(String toAddress,double value, HttpServletRequest request) {
+    @GetMapping("getAccountPrivateKey")
+    public ResultBean getAccountPrivateKey(String password, HttpServletRequest request){
         UserDetails userDetails = getUserDetails(request);
         if (userDetails == null) {
             return ResultBean.fail(ResponseStatus.NO_LOGIN);
         }
-        log.debug("payWithBlockchain src： "+userDetails.getUsername()+" "+userDetails.getAccountAddress());
-        String srcAddress="0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b";
-        String privateKey="0xc75a5f85ef779dcf95c651612efb3c3b9a6dfafb1bb5375905454d9fc8be8a6b";
+        log.info("USERCONTROLLER getAccountPrivateKey:"+userDetails.getId()+" : "+password);
+        return ResultBean.ok(userService.getPrivateKey(userDetails.getId(),password));
+    }
 
-        return ResultBean.ok(blockchainService.sendSignedTransaction(srcAddress, toAddress, value, privateKey));
+    /**
+     * 使用原生币支付，
+     * 通过登录用户信息，及输入的交易密码，转移区块链的原生通证。
+     * 为与原有系统兼容，输入单位最小设为0.01元。
+     * 返回交易HASH
+     * */
+    @PostMapping("payWithBlockchain")
+    public ResultBean payWithBlockchain(String toAddress,double value, String password, HttpServletRequest request) {
+        UserDetails userDetails = getUserDetails(request);
+        if (userDetails == null) {
+            return ResultBean.fail(ResponseStatus.NO_LOGIN);
+        }
+        // 检测用户是否有区块链钱包，如果有解锁相应钱包
+        log.debug("payWithBlockchain src： "+userDetails.getId()+" "+userDetails.getAccountAddress());
+//        String srcAddress="0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b";
+//        String privateKey="0xc75a5f85ef779dcf95c651612efb3c3b9a6dfafb1bb5375905454d9fc8be8a6b";
+        int intValue = (int) (value * 100);
+        return ResultBean.ok(userService.transferBalance(userDetails.getId(), userDetails.getAccountAddress(), toAddress, intValue, password));
+//        return ResultBean.ok(blockchainService.sendSignedTransaction(srcAddress, toAddress, value, privateKey));
     }
 
     /**
@@ -340,16 +360,18 @@ public class UserController extends BaseController {
      * value - 转移的通证数量，需要使用合约中的decimal变量转换为bigint
      * */
     @PostMapping("payWithToken")
-    public ResultBean payWithToken(String tokenAddress, String srcAddress, String toAddress, double value, HttpServletRequest request) {
+    public ResultBean payWithToken(String toAddress, String tokenAddress, double value, String password, HttpServletRequest request) {
         UserDetails userDetails = getUserDetails(request);
         if (userDetails == null) {
             return ResultBean.fail(ResponseStatus.NO_LOGIN);
         }
-        log.debug("payWithToken src： "+userDetails.getUsername()+" "+userDetails.getAccountAddress());
+        log.debug("payWithToken src： "+userDetails.getId()+" "+userDetails.getAccountAddress());
         log.debug("payWithToken： "+tokenAddress+" to "+toAddress);
-        srcAddress="0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b";
-        String privateKey="0xc75a5f85ef779dcf95c651612efb3c3b9a6dfafb1bb5375905454d9fc8be8a6b";
-
-        return ResultBean.ok(blockchainService.transferBookToken(tokenAddress, srcAddress, toAddress, value, privateKey));
+        int intValue = (int) (value * 100);
+        return ResultBean.ok(userService.transferTokenBalance(userDetails.getId(), userDetails.getAccountAddress(), toAddress, tokenAddress, intValue, password));
+//        srcAddress="0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b";
+//        String privateKey="0xc75a5f85ef779dcf95c651612efb3c3b9a6dfafb1bb5375905454d9fc8be8a6b";
+//
+//        return ResultBean.ok(blockchainService.transferBookToken(tokenAddress, srcAddress, toAddress, value, privateKey));
     }
 }

@@ -18,5 +18,4 @@ public class BusinessException extends RuntimeException {
         this.resStatus = resStatus;
     }
 
-
 }

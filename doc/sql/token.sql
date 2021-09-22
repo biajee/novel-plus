@@ -40,6 +40,30 @@ CREATE TABLE `user_account` (
 INSERT INTO `user_account` VALUES ('1', '1260400284744613891', '0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b', '0xc75a5f85ef779dcf95c651612efb3c3b9a6dfafb1bb5375905454d9fc8be8a6b', null, null);
 INSERT INTO `user_account` VALUES ('2', '1413956884249956352', '0xa8863fc8ce3816411378685223c03daae9770ebb', null, null, null);
 
+-- ----------------------------
+-- Table structure for user_wallet
+-- 用户区块链账户信息，包括账户地址、私钥、keystore和密码
+-- 钱包文件长度一般不超过500个bytes；
+-- 一个用户ID有可能对应多个钱包；
+-- TODO： 用户私钥将来需要替换，目前仅为DEBUG用。
+-- ----------------------------
+DROP TABLE IF EXISTS `user_wallet`;
+CREATE TABLE `user_wallet` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `user_address` varchar(42) DEFAULT NULL COMMENT '用户账户地址',
+  `private_key` varchar(100) DEFAULT NULL COMMENT '用户私钥',
+  `keystore` varchar(500) DEFAULT NULL COMMENT '用户钱包文件',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='钱包';
+
+-- ----------------------------
+-- Records of 用户钱包
+-- 本地节点测试账户
+-- ----------------------------
+INSERT INTO `user_wallet` VALUES ('1', '1260400284744613891', '0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b', '0xc75a5f85ef779dcf95c651612efb3c3b9a6dfafb1bb5375905454d9fc8be8a6b', null);
+INSERT INTO `user_wallet` VALUES ('2', '1413956884249956352', '0xa8863fc8ce3816411378685223c03daae9770ebb', null, null);
+
 
 -- ----------------------------
 -- Table structure for token_details
