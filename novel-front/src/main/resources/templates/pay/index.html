@@ -12,7 +12,7 @@
 <div th:replace="common/top :: top('')">
 </div>
 
-<!--修改替换aliPay过程-->
+<!--修改替换aliPay过程，转为区块链账户支付-->
 <form action="/pay/blockchainPay" method="post" id="payform" name="payform">
     <div class="main box_center cf">
 
@@ -22,24 +22,26 @@
                 <div class="payHead cf">
                     <div class="fl">
                         充值账号：<span class="user_name" id="my_name"></span>余额：<em class="red" id="accountBalance">0</em>书币<!--<em class="red">+0</em>代金券-->
+                        <br />
+                        区块链账号：<span class="user_name" id="blockchain_address"></span>区块链余额：<em class="red" id="blockchain_balance">0</em>通证<!--<em class="red">+0</em>代金券-->
                     </div>
                 </div>
                 <div class="payCon">
                     <h5>选择充值方式</h5>
                     <ul class="pay_way cf" id="ulPayType">
-                        <li class="on"  valp="1"><img class="pay_pic" src="../images/pay_zfb.png" alt="支付宝支付" /></li>
+                        <li valp="1"><img class="pay_pic" src="../images/pay_zfb.png" alt="支付宝支付" /></li>
                         <li class="on"  valp="2"><img class="pay_pic" src="../images/pay_mc.png" alt="MOAC支付" /></li>
                         <li valp="3"><img class="pay_pic" src="../images/pay_usdc.png" alt="USDC支付" /></li>
 
                     </ul>
                     <h5>选择充值金额</h5>
-                    <ul class="pay_way cf" id="ulZFWX">
+                    <ul class="pay_way cf" id="ulPayAmount">
                         <li vals="10"><strong>10 MOAC</strong><span class="pay_mn">1000书币</span></li>
-                        <li vals="30"><strong>1 USDC</strong><span class="pay_mn">3000书币</span></li>
-                        <li vals="50"><strong>50元</strong><span class="pay_mn">5000书币<!--<em class="red">+ 送500代金券</em>--></span></li>
-                        <li vals="100"><strong>100元</strong><span class="pay_mn">10000书币<!--<em class="red">+ 送1200代金券</em>--></span></li>
-                        <li vals="200"><strong>200元</strong><span class="pay_mn">20000书币<!--<em class="red">+ 送3000代金券</em>--></span></li>
-                        <li vals="500"><strong>500元</strong><span class="pay_mn">50000书币<!--<em class="red">+ 送10000代金券</em>--></span></li>
+                        <li vals="30"><strong>30 MOAC</strong><span class="pay_mn">3000书币</span></li>
+                        <li vals="50"><strong>50 MOAC</strong><span class="pay_mn">5000书币<!--<em class="red">+ 送500代金券</em>--></span></li>
+                        <li vals="100"><strong>100 MOAC</strong><span class="pay_mn">10000书币<!--<em class="red">+ 送1200代金券</em>--></span></li>
+                        <li vals="200"><strong>200 MOAC</strong><span class="pay_mn">20000书币<!--<em class="red">+ 送3000代金券</em>--></span></li>
+                        <li vals="500"><strong>500 MOAC</strong><span class="pay_mn">50000书币<!--<em class="red">+ 送10000代金券</em>--></span></li>
                     </ul>
 
                 </div>
@@ -47,9 +49,8 @@
                     <strong class="tip_tit">温馨提示</strong>
                     <ul class="tip_list">
                         <li>1. 充值阅读权限仅限本书城使用</li>
-                        <li>2. 充值支持支付宝余额、USDC通证等支付</li>
-                        <li>3. 包年时间是365天，重复购买时间会累加</li>
-                        <li>4. 若充值遇到问题，<a href="/user/feedback.html" target="_blank" class="unlink black9">点此留言</a></li>
+                        <li>2. 充值支持区块链通证支付</li>
+                        <li>3. 若充值遇到问题，<a href="/user/feedback.html" target="_blank" class="unlink black9">点此留言</a></li>
                     </ul>
                 </div>
             </div>
@@ -64,7 +65,6 @@
 </div>
 <div th:replace="common/js :: js"></div>
 <script src="/javascript/pay.js" type="text/javascript"></script>
-
 <script type="text/javascript">
 
     //查询用户信息
@@ -82,6 +82,7 @@
                 }
 
                 $("#accountBalance").html(data.data.accountBalance);
+                $("#blockchain_address").html(data.data.blockchainAddress);
 
             } else if (data.code == 1001) {
                 //未登录
@@ -97,56 +98,50 @@
         }
     })
 
-    $("#ulZFWX").find("li").click(function () {
+    // 使用用户信息显示区块链原生通证余额
+    $.ajax({
+        type: "GET",
+        url: "/user/getAccountBalance",
+        data: {},
+        dataType: "json",
+        success: function (data) {
+            if (data.code == 200) {
+                $("#blockchain_balance").html(data.data*1e-18);
+            } else if(data.code == 1001){
+                //未登录
+                location.href = '/user/login.html?originUrl='+decodeURIComponent(location.href);
 
+            }else {
+                layer.alert(data.msg);
+            }
+
+        },
+        error: function () {
+            layer.alert('网络异常');
+        }
+    })
+
+    // 支付额度点击
+    $("#ulPayAmount").find("li").click(function () {
+
+        // 确定支付种类，默认区块链支付
         var payType = $("#ulPayType").find("li.on").attr("valp");
 
-        console.log("Pay amount:", $(this).attr("vals"));
-        // 调用区块链支付
-        //if(payType == 3){
-             //layer.alert("墨客支付暂未开通，敬请期待");
-             //return ;
-        //}
-        if(payType == 2){
-            layer.alert("mou h支付暂未开通，敬请期待");
+        // 暂停其它支付方式
+        if(payType == 3){
+            layer.alert("本支付方式暂未开通，敬请期待");
             return ;
         }
 
         $("#pValue").val($(this).attr("vals"));
+        console.log("Pay amount:", $(this).attr("vals"));
 
+        // 会跳转到 /pay/blockchainPay 里面的 POST 方法
         $("#payform").submit();
 
     });
 
-    // 使用web3j直接对接区块链后台，使用用户原生通证支付
-    function payAccountBalance(){
-        $.ajax({
-            type: "GET",
-            url: "/contract/getAccountBalance",
-            data: {'accountAddress':inTestAddress},
-            dataType: "json",
-            success: function (data) {
-                if (data.code == 200) {
-                    $("#accountBalanceOnChain").html(data.data);
-                    console.log("data.data:", data.data);
-
-                } else if(data.code == 1001){
-                    //未登录
-                    location.href = '/user/login.html?originUrl='+decodeURIComponent(location.href);
-
-                }else {
-                    layer.alert(data.msg);
-                }
-
-            },
-            error: function () {
-                layer.alert('网络异常');
-            }
-        })
-
-    }
 </script>
-
 
 </body>
 </html>

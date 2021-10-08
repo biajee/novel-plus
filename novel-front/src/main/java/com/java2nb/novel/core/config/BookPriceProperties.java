@@ -19,5 +19,4 @@ public class BookPriceProperties {
 
     private BigDecimal value;
 
-
 }

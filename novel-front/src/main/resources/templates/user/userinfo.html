@@ -130,6 +130,7 @@
                 $("#accountBalance").html(data.data.accountBalance);
                 userAddress = data.data.blockchainAddress;
 
+
             } else if (data.code == 1001) {
                 //未登录
                 location.href = '/user/login.html?originUrl=' + decodeURIComponent(location.href);
@@ -190,7 +191,6 @@
     })
 
     // Access the blockchain to get the highest block
-    // test purpose, set the news in the news_controller
     function getBlockchainHeight(){
         $.ajax({
             type: "GET",
@@ -199,7 +199,7 @@
             success: function (data) {
                 if (data.code == 200) {
                   $("#blockchain_height").html(data.data);
-console.log("data.data:", data.data);
+console.log("getBlockchainHeight:", data.data);
 
                 } else if(data.code == 1001){
                     //未登录
@@ -229,63 +229,71 @@ console.log("data.data:", data.data);
 
     }
 
-    // Return the balance of user account
-    function getMyAccountBalance(){
-    console.log("getMyAccountBalance:", userAddress);
-    getAccountBalanceByAddress(userAddress);
-    }
-
-    // 显示测试账户原生币信息
-    function getTestAccountBalance(){
-    var myAddress = document.getElementById("to_addrress").value;
-    bal = getAccountBalanceByAddress(myAddress);
-    console.log("getTestAccountBalance:", myAddress, "bal:", bal);
-    }
-
     // 使用web3j直接对接区块链后台，显示用户原生通证余额
-    function getAccountBalanceByAddress(inAccountAddress){
-        $.ajax({
-            type: "GET",
-            url: "/user/getAccountBalance",
-            data: {'accountAddress':inAccountAddress},
-            dataType: "json",
-            success: function (data) {
-                if (data.code == 200) {
-                  if ( inAccountAddress == userAddress ){
-                    $("#accountBalanceOnChain").html(data.data*1e-18);
-                  }else{
-                    // show test account balance
-                    $("#test_account_balance").html(data.data*1e-18);
-                  }
+    function getMyAccountBalance(){
+        // 使用用户信息显示区块链原生通证余额
+    $.ajax({
+        type: "GET",
+        url: "/user/getAccountBalance",
+        data: {},
+        dataType: "json",
+        success: function (data) {
+            if (data.code == 200) {
+                $("#accountBalanceOnChain").html(data.data*1e-18);
 
-                } else if(data.code == 1001){
-                    //未登录
-                    location.href = '/user/login.html?originUrl='+decodeURIComponent(location.href);
+            } else if(data.code == 1001){
+                //未登录
+                location.href = '/user/login.html?originUrl='+decodeURIComponent(location.href);
 
-                }else {
-                    layer.alert(data.msg);
-                }
-
-            },
-            error: function () {
-                layer.alert('网络异常');
+            }else {
+                layer.alert(data.msg);
             }
-        })
+
+        },
+        error: function () {
+            layer.alert('网络异常');
+        }
+    })
     }
 
-    //Hard coded to show the srcAccount balance
-    function getSrcAccountBalance(){
+    // 使用用户信息显示区块链原生通证余额
+    $.ajax({
+        type: "GET",
+        url: "/user/getAccountBalance",
+        data: {},
+        dataType: "json",
+        success: function (data) {
+            if (data.code == 200) {
+                $("#accountBalanceOnChain").html(data.data*1e-18);
+
+            } else if(data.code == 1001){
+                //未登录
+                location.href = '/user/login.html?originUrl='+decodeURIComponent(location.href);
+
+            }else {
+                layer.alert(data.msg);
+            }
+
+        },
+        error: function () {
+            layer.alert('网络异常');
+        }
+    })
+
+
+    //Hard coded to show the testAccount balance
+    function getTestAccountBalance(){
+    var toAddress = document.getElementById("to_addrress").value;
         $.ajax({
             type: "GET",
-            url: "/user/getAccountBalance",
-            data: {'accountAddress':testAddress},
+            url: "/contract/getAccountBalance",
+            data: {'accountAddress':toAddress},
             dataType: "json",
             success: function (data) {
                 if (data.code == 200) {
                 // 原生币，需要减去decimal数量
                   $("#test_account_balance").html(data.data*1e-18);
-console.log("getSrcAccountBalance", testAddress, ".data:", data.data);
-
+console.log("getTestAccountBalance", testAddress, ".data:", data.data);
                 } else if(data.code == 1001){
                     //未登录
                     location.href = '/user/login.html?originUrl='+decodeURIComponent(location.href);

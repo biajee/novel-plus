@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 /**
- * @author 11797
+ * @author mdranger
  * 使用Web3j创建相应区块链交易功能
  */
 public interface BlockchainService {
@@ -75,7 +75,7 @@ public interface BlockchainService {
      * @param bookTokenAddress 通证合约地址
      * @param fromUserAddress      拥有通证的用户地址
      * @param toUserAddress 目标地址
-     * @param Amount 通证数量
+     * @param amount 通证数量
      * @param privateKey 发送账户的私钥
      * @return 交易的HASH值
      * */
@@ -88,4 +88,12 @@ public interface BlockchainService {
      * @return privateKey
      */
     String decryptWallet(String keystore, String password);
+
+    /**
+     * 验证用户签名，使用内置的随机数
+     * @param publicAddress 用户钱包文件的String
+     * @param signature 用户钱包密码
+     * @return 返回成功与否
+     */
+    Boolean verifySignature(String publicAddress, String signature);
 }

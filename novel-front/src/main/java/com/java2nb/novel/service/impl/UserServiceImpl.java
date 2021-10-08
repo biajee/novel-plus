@@ -39,6 +39,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.io.IOException;
+import java.util.Random;
 
 //import static com.java2nb.novel.mapper.BookDynamicSqlSupport.id;
 import static com.java2nb.novel.mapper.UserBookshelfDynamicSqlSupport.userBookshelf;
@@ -47,6 +48,7 @@ import static com.java2nb.novel.mapper.UserFeedbackDynamicSqlSupport.userFeedbac
 import static com.java2nb.novel.mapper.UserReadHistoryDynamicSqlSupport.userReadHistory;
 import static com.java2nb.novel.mapper.UserTokenListDynamicSqlSupport.bookId;
 import static com.java2nb.novel.mapper.UserTokenListDynamicSqlSupport.userTokenList;
+import static com.java2nb.novel.mapper.UserWalletDynamicSqlSupport.userAddress;
 import static com.java2nb.novel.mapper.UserWalletDynamicSqlSupport.userWallet;
 import static org.mybatis.dynamic.sql.SqlBuilder.*;
 import static org.mybatis.dynamic.sql.select.SelectDSL.select;
@@ -81,6 +83,8 @@ public class UserServiceImpl implements UserService {
 
     /*
      * 增加区块链钱包的生成
+     * 增加对区块链账户签名的验证和登录许可
+     *
      */
     @Override
     public UserDetails register(User user) {
@@ -152,11 +156,12 @@ public class UserServiceImpl implements UserService {
 
     /*
     * 加入UserDetails的内容
-     */
+    * 注意要加上blockchainAddress
+    */
     @Override
     public UserDetails login(User user) {
         //根据用户名密码查询记录
-        SelectStatementProvider selectStatement = select(id, username,nickName)
+        SelectStatementProvider selectStatement = select(id, username,nickName,blockchainAddress)
                 .from(UserDynamicSqlSupport.user)
                 .where(username, isEqualTo(user.getUsername()))
                 .and(password, isEqualTo(MD5Util.MD5Encode(user.getPassword(), Charsets.UTF_8.name())))
@@ -169,6 +174,33 @@ public class UserServiceImpl implements UserService {
         //生成UserDetail对象并返回
         UserDetails userDetails = new UserDetails();
         user = users.get(0);
+        userDetails.setId(user.getId());
+        userDetails.setNickName(user.getNickName());
+        userDetails.setUsername(user.getUsername());
+        userDetails.setAccountAddress(user.getBlockchainAddress());
+        return userDetails;
+    }
+
+    /*
+     * 从数据库中检索用户的publicAddress，
+     *
+     */
+    @Override
+    public UserDetails loginWithBlockchainAccountSignature(String publicAddress, String signature) {
+        //根据用户的账户地址查询记录
+        SelectStatementProvider selectStatement = select(id, username,userAddress)
+                .from(UserDynamicSqlSupport.user)
+                .where(userAddress, isEqualTo(publicAddress))
+                .build()
+                .render(RenderingStrategies.MYBATIS3);
+        List<User> users = userMapper.selectMany(selectStatement);
+        if (users.size() == 0) {
+            throw new BusinessException(ResponseStatus.BLOCKCHAIN_ACCOUNT_ERROR);
+        }
+        // 验证用户签名的正确性
+        //生成UserDetail对象并返回
+        UserDetails userDetails = new UserDetails();
+        User user = users.get(0);
         userDetails.setId(user.getId());
         userDetails.setNickName(user.getNickName());
         userDetails.setUsername(user.getUsername());
@@ -534,13 +566,21 @@ public class UserServiceImpl implements UserService {
                 .and(UserWalletDynamicSqlSupport.userAddress, isEqualTo(srcAddress))
                 .build()
                 .render(RenderingStrategies.MYBATIS3);
-        UserWallet myUserWallet = userWalletMapper.selectMany(selectStatement).get(0);
-        log.info("getUserWalletPrivateKey：找到钱包ID"+myUserWallet.getUserAddress());
+        List<UserWallet> users = userWalletMapper.selectMany(selectStatement);
+        if (users.size() == 0) {
+            throw new BusinessException(ResponseStatus.BLOCKCHAIN_PRIVATEKEY_ERROR);
+        }
+        UserWallet myUserWallet = users.get(0);
+
+
         //使用用户密码对钱包文件解锁，返回私钥
         if ( myUserWallet != null){
+            log.info("getUserWalletPrivateKey：找到钱包ID"+myUserWallet.getUserAddress());
+            log.info("getUserWalletPrivateKey：unlock with <"+password+">");
             return blockchainService.decryptWallet(myUserWallet.getKeystore(),password);
+        }else {
+            return null;
         }
-        return null;
 
     }
 
@@ -557,7 +597,11 @@ public class UserServiceImpl implements UserService {
                 .build()
                 .render(RenderingStrategies.MYBATIS3);
 //        List<UserWallet> myWallets = userWalletMapper.selectMany(selectStatement);
-        UserWallet myUserWallet = userWalletMapper.selectMany(selectStatement).get(0);
+        List<UserWallet> users = userWalletMapper.selectMany(selectStatement);
+        if (users.size() == 0) {
+            throw new BusinessException(ResponseStatus.BLOCKCHAIN_PRIVATEKEY_ERROR);
+        }
+        UserWallet myUserWallet = users.get(0);
         log.info("getPrivateKey：找到钱包ID"+myUserWallet.getUserAddress()+" key:"+myUserWallet.getPrivateKey());
         return myUserWallet.getPrivateKey();
 //        return blockchainService.decryptWallet(userWallet.getKeystore(),password);
@@ -578,7 +622,11 @@ public class UserServiceImpl implements UserService {
                 .where(UserWalletDynamicSqlSupport.userId, isEqualTo(inUserId))
                 .build()
                 .render(RenderingStrategies.MYBATIS3);
-        UserWallet myUserWallet = userWalletMapper.selectMany(selectStatement).get(0);
+        List<UserWallet> users = userWalletMapper.selectMany(selectStatement);
+        if (users.size() == 0) {
+            throw new BusinessException(ResponseStatus.BLOCKCHAIN_PRIVATEKEY_ERROR);
+        }
+        UserWallet myUserWallet = users.get(0);
 
         String privateKey = null;
         // 2. 使用当前密码导出私钥，解锁钱包
@@ -606,10 +654,15 @@ public class UserServiceImpl implements UserService {
         userWalletMapper.updateByPrimaryKey(myUserWallet);
     }
 
-//    SelectStatementProvider selectStatement = select(count(UserBookshelfDynamicSqlSupport.id))
-//            .from(userBookshelf)
-//            .where(UserBookshelfDynamicSqlSupport.userId, isEqualTo(userId))
-//            .and(UserBookshelfDynamicSqlSupport.bookId, isEqualTo(bookId))
+    /*
+     * 根据输入的publicAddress查询相应的UserDetails
+     * 注意，这个nonce不是交易的Nonce，而是账户登录所使用的随机数
+     */
+    public int getUserAccountNonce(String accountAddress) {
+        return new Random().nextInt(10);
+
+    }
+
 //    @Override
 //    public void spTokenDist(Long userBuyRecordId, Float distPercentage) {
 //        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("sp_token_dist");

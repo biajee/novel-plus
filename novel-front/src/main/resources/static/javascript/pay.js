@@ -7,37 +7,11 @@ var UserPay = {
 }
 
 $(function () {
+
+    // 点击支付种类
     $("#ulPayType li").click(function () {
 
-console.log("In pay.js, Pay amount:", $(this).attr("vals"));
-        if($(this).attr("valp")==2){
-//            layer.alert("微信支付暂未开通，敬请期待");
-             $.ajax({
-                        type: "GET",
-                        url: "/contract/getAccountBalance",
-                        data: {'accountAddress':inTestAddress},
-                        dataType: "json",
-                        success: function (data) {
-                            if (data.code == 200) {
-                              $("#accountBalanceOnChain").html(data.data);
-            console.log("data.data:", data.data);
-
-                            } else if(data.code == 1001){
-                                //未登录
-                                location.href = '/user/login.html?originUrl='+decodeURIComponent(location.href);
-
-                            }else {
-                                layer.alert(data.msg);
-                            }
-
-                        },
-                        error: function () {
-                            layer.alert('网络异常');
-                        }
-                    })
-        }
-
-        return ;
+console.log("In pay.js, Pay amount:", $(this).attr("vals"), " type:", $(this).attr("valp"));
 
         $($(this).parent()).children().each(function () {
             $(this).removeClass("on");
@@ -48,20 +22,22 @@ console.log("In pay.js, Pay amount:", $(this).attr("vals"));
         if (type == "3") {
             $("#ulPayPal").show();
             $("#ulPayPalXJ").show();
-            $("#ulZFWX").hide();
+            $("#ulPayAmount").hide();
             $("#ulZFWXXJ").hide();
         }
         else {
             $("#ulPayPal").hide();
             $("#ulPayPalXJ").hide();
-            $("#ulZFWX").show();
+            $("#ulPayAmount").show();
             $("#ulZFWXXJ").show();
         }
 
     })
 
-    $("#ulZFWX li").click(function () {
-        $("#ulZFWX li").removeClass("on");
+    //
+    $("#ulPayAmount li").click(function () {
+    console.log("ulPayAmount click")
+        $("#ulPayAmount li").removeClass("on");
         $(this).addClass("on");
         if ($(this).attr("vals") > 0) {
             $("#pValue").val($(this).attr("vals"));
@@ -74,6 +50,7 @@ console.log("In pay.js, Pay amount:", $(this).attr("vals"));
             }
         }
     });
+
     $("#ulPayPal li").click(function () {
         $("#ulPayPal li").removeClass("on");
         $(this).addClass("on");

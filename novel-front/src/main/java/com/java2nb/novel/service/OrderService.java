@@ -26,4 +26,18 @@ public interface OrderService {
      * @param tradeStatus 支付状态
      * */
     void updatePayOrder(Long outTradeNo, String tradeNo, String tradeStatus);
+
+    /**
+     * 提交区块链充值订单，
+     * TODO 允许使用用户的多个账户地址，或者签名后的交易
+     *
+     * @param userId 用户ID
+     * @param srcAddress 用户的账户地址
+     * @param desAddress 支付对象账户地址
+     * @param payAmount 支付金额
+     * @param inPassword 用户账户的支付密码
+     * @return 商户订单号
+     * */
+    String submitPayOrder(Long userId, String srcAddress, String desAddress, int payAmount, String inPassword);
+
 }

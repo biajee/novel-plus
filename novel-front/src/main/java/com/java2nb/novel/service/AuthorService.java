@@ -25,7 +25,7 @@ public interface AuthorService {
     /**
      * 作家注册
      * @param userId 注册用户ID
-     *@param author 注册信息
+     * @param author 注册信息
      * @return 返回错误信息
      * */
     String register(Long userId, Author author);

@@ -87,7 +87,8 @@ public enum ResponseStatus {
      * */
     BLOCKCHAIN_PRIVATEKEY_ERROR( 11001, "账户私钥获取错误！"),
     BLOCKCHAIN_ACCOUNT_ERROR(11002,"账户错误！"),
-    BLOCKCHAIN_TX_ERROR(11003,"交易错误！");
+    BLOCKCHAIN_TX_ERROR(11003,"交易错误！"),
+    BLOCKCHAIN_PARAM_ERROR(11005,"输入参数错误！");
 
     private int code;
     private String msg;

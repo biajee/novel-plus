@@ -46,12 +46,12 @@
                     </ul>
                     <ul class="pay_Checkout" id="ulZFWXXJ">
                         <li>当前汇率：1元=100屋币</li>
-                        <li>总计金额：<em class="red" id="showTotal">￥50元</em> 获得 <em class="red" id="showRemark">5000屋币<!--+500代金券--></em></li>
+                        <li>总计金额：<em class="red" id="showTotal">￥50元</em> 获得 <em class="red" id="showRemark">5000书币<!--+500代金券--></em></li>
                         <li style="display:none"><a class="btn_red" href="pay_success.html" onclick="javascript:UserPay.sendPay();">立即支付</a></li>
                     </ul>
                     <ul class="pay_Checkout" style="display:none;" id="ulPayPalXJ">
                         <li>当前汇率：1美元=500屋币</li>
-                        <li>总计金额：<em class="red" id="showPayPalTotal">50美元</em> 获得 <em class="red" id="showPayPalRemark">25000屋币</em></li>
+                        <li>总计金额：<em class="red" id="showPayPalTotal">50美元</em> 获得 <em class="red" id="showPayPalRemark">25000书币</em></li>
                         <li style="display:none"><a class="btn_red" href="javascript:void(0);" onclick="javascript:UserPay.sendPay();">立即支付</a></li>
                     </ul>
                 </div>
@@ -78,8 +78,6 @@
 <script src="/javascript/pay.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-
-
 
     //查询用户信息
     $.ajax({
@@ -123,10 +121,6 @@
         $("#pValue").val($(this).attr("vals"));
 
         $("#payform").submit();
-
-
-
-
 
     });
 </script>

@@ -11,39 +11,70 @@
 
 <div th:replace="common/top :: top('')">
 </div>
+
+<!--The form is used to get user wallet password or signed raw tx,
+    then submit to payController blockchainPay/notify for further actions.
+-->
+<form action="./blockchainPay.html" method="post" id="txform" name="txform">
 <div class="main box_center cf">
     <div class="userBox cf">
         <div class="my_r">
-            <div class="my_info cf">
-                <img id="imgLogo" class="user_big_head" src="/images/man.png" />
-                <div class="my_info_txt">
-                    <p class="my_name" id="my_name">
-                    </p>
-                    <ul class="my_list">
-                        <li class="my_blockchain_address"><i>区块链地址：</i><em class="red" id="blockchain_address"></em></li>
-                        <li class="my_blockchain_height"><i>区块链高度：</i><em class="red" id="blockchain_height">0</em><a class="btn_link" href="javascript:getBlockchainHeight()" >更新</a></li>
-                        <li class="my_gold"><i>账户余额：</i><em class="red" id="accountBalance">0</em>通证<!--<em class="red">+</em><em class="red">0</em>代金券--><a href="/pay/index.html" class="btn_link">立即充值</a></li>
-                        <li class="my_gold"><i>链上余额：</i><em class="red" id="accountBalanceOnChain">0</em><a class="btn_link" href="javascript:getAccountBalance()" >更新</a></li>
-                        <li class="my_gold"><i>通证名称：</i><em class="red" id="token_name">0</em><a class="btn_link" href="javascript:getTokenName()" >更新</a></li>
-                        <li class="my_gold"><i>通证余额：</i><em class="red" id="token_balance">0</em><a class="btn_link" href="javascript:getTokenBalance()" >更新</a></li>
-
-                    </ul>
+            <div class="payHead cf">
+                <div class="fl">
+                    充值账号：<span class="user_name" id="my_name"></span>余额：<em class="red" id="accountBalance">0</em>书币
+                    <br />
+                    区块链账号：<span class="user_name" id="blockchain_address">0x</span>区块链余额：<em class="red" id="blockchain_balance">0</em>通证<!--<em class="red">+0</em>代金券-->
                 </div>
             </div>
+            <br />
+            <ul calss="tx_test">
+                <li><span id="LabErr"></span></li>
+                <li><i>充值单号：</i><input type="number" id="out_trade_no" value="0"></li>
+                <li><i>平台账户地址：</i><em class="red" id="to_addrress">0x7312F4B8A4457a36827f185325Fd6B66a3f8BB8B</em></li>
+                <li><i>充值原生币数量：</i><input type="number" id="total_amount"></li>
+<!--                <li class="tx_test"><i>账户nonce：</i><em class="red" id="src_nonce">0</em></li>-->
+<!--                <li class="tx_test"><i>交易密码：</i><input type="password" id="src_password" name="src_password"><a class="btn_link" href="javascript:payWithBlockchain()" >支付</a></li>-->
+<!--                <li class="tx_test"><i>交易HASH：</i><em class="red" id="tx_hash">0x</em></li>-->
+                <li><i>交易密码：</i></li>
+            </ul>
+            <input type="password" id="src_password" name="src_password">
+            <input type="button" name="btnSubmit" value="提交充值" id="btnSubmit" class="btn_red" />
 
         </div>
     </div>
 </div>
-
+    <input type="hidden" id="txReceipt" name="txReceipt"  />
+</form>
 
 <div th:replace="common/footer :: footer">
 </div>
 <div th:replace="common/js :: js"></div>
-<script src="/javascript/pay.js" type="text/javascript"></script>
+<!--<script src="/javascript/pay.js" type="text/javascript"></script>-->
 
 <script type="text/javascript">
 
-    //查询用户信息
+    // Should be passed from previous call of blockchainPay
+    var payAmount = getSearchString("payAmount");
+    var outTradeNo = getSearchString("outTradeNo");
+
+    // When no payAmount is found, return to pay index page
+    if ( payAmount == null ){
+    location.href = '/pay/index.html';
+    }
+
+    console.log("Find payAmount", payAmount, "trade no", outTradeNo);
+    // display the pay amount and trade number
+    const pay_value =  document.getElementById('total_amount');
+    pay_value.value = payAmount;
+    const trade_num = document.getElementById('out_trade_no');
+    trade_num.value = outTradeNo;
+
+    // debug only
+    const input_password =  document.getElementById('src_password');
+    console.log("find parameter:", payAmount, "user input", input_password.value);
+
+
+    //查询并显示用户信息
     $.ajax({
         type: "get",
         url: "/user/userInfo",
@@ -58,6 +89,8 @@
                 }
 
                 $("#accountBalance").html(data.data.accountBalance);
+                $("#blockchain_address").html(data.data.blockchainAddress);
+
 
             } else if (data.code == 1001) {
                 //未登录
@@ -73,39 +106,104 @@
         }
     })
 
-    $("#ulZFWX").find("li").click(function () {
+    // 显示用户区块链账户余额
 
-        var payType = $("#ulPayType").find("li.on").attr("valp");
+    $.ajax({
+        type: "GET",
+        url: "/user/getAccountBalance",
+        data: {},
+        dataType: "json",
+        success: function (data) {
+            if (data.code == 200) {
+console.log("Return balance in blockchainPay:",data.data);
+              //display balance
+              $("#blockchain_balance").html(data.data*1e-18);
 
-        // 调用区块链支付
-        if(payType == 3){
-             //layer.alert("墨客支付暂未开通，敬请期待");
-             return ;
+            } else if(data.code == 1001){
+                //未登录
+                location.href = '/user/login.html?originUrl='+decodeURIComponent(location.href);
+
+            }else {
+                layer.alert(data.msg);
+            }
+
+        },
+        error: function () {
+            layer.alert('网络异常');
+        }
+    })
+
+
+    // 交易提交点击
+    $("#btnSubmit").click(function () {
+        var amount = $("#total_amount").val();
+        if(amount.isBlank()){
+            $("#LabErr").html("充值金额不能为空！");
+            return;
         }
 
-        $("#pValue").val($(this).attr("vals"));
+        var password = $("#src_password").val();
+        if(password.isBlank()){
+            $("#LabErr").html("密码不能为空！");
+            return;
+        }
 
-        $("#payform").submit();
+        var tradeNumber = $("#out_trade_no").val();
+        if(tradeNumber.isBlank()){
+            $("#LabErr").html("充值单号不能为空！");
+            return;
+        }
 
-    });
-
-    // 使用web3j直接对接区块链后台，使用用户原生通证支付
-    function payAccountBalance(){
         $.ajax({
-            type: "GET",
-            url: "/contract/getAccountBalance",
-            data: {'accountAddress':inTestAddress},
+            type: "POST",
+            url: "/pay/blockchainPaySubmitTx",
+            data: {"amount": amount, "password": password,"tradeNumber": tradeNumber},
             dataType: "json",
             success: function (data) {
                 if (data.code == 200) {
-                  $("#accountBalanceOnChain").html(data.data);
-console.log("data.data:", data.data);
+                    // 充值成功，返回上一级页面
+                    window.location.href = "/pay/index.html";
+                } else {
+                    $("#LabErr").html(data.msg);
+                }
 
-                } else if(data.code == 1001){
+            },
+            error: function () {
+                layer.alert('网络异常');
+            }
+        })
+
+    })
+
+    // 使用web3j直接对接区块链后台，完成原生通证交易
+    // 充值功能，默认使用书城的账户地址为目的地址，
+    //
+    // 将来为获取通证的过程
+    // 向测试账户地址发送系统原生币
+    function payWithBlockchain() {
+     var txValue = document.getElementById("total_amount").value;
+     var inPassword = document.getElementById("src_password").value;
+     //var desAddress = document.getElementById("to_addrress").value;
+     var desAddress="0x7312F4B8A4457a36827f185325Fd6B66a3f8BB8B";
+
+     console.log("toAddress:",desAddress, " value:", txValue, "pass:", inPassword);
+        $.ajax({
+            type: "POST",
+            url: "/user/payWithBlockchain",
+            data: {'toAddress': desAddress, 'password':inPassword, 'value': txValue},
+            dataType: "json",
+            success: function (data) {
+                if (data.code == 200) {
+                    $("#tx_hash").html(data.data);
+                    //显示交易HASH
+                    console.log("payWithBlockchain.data:", data.data);
+                    console.log("ID userAddress:", userAddress);//Set in getUserInfo
+
+                } else if (data.code == 1001) {
                     //未登录
-                    location.href = '/user/login.html?originUrl='+decodeURIComponent(location.href);
+                    location.href = '/user/login.html?originUrl=' + decodeURIComponent(location.href);
 
-                }else {
+                } else {
                     layer.alert(data.msg);
                 }
 

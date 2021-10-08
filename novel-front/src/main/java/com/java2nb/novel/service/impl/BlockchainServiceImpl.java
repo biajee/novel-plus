@@ -2,6 +2,7 @@ package com.java2nb.novel.service.impl;
 
 import com.java2nb.novel.core.bean.ResultBean;
 import com.java2nb.novel.core.enums.ResponseStatus;
+import com.java2nb.novel.core.exception.BusinessException;
 import com.java2nb.novel.service.BlockchainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import com.java2nb.novel.core.config.BlockchainProperties;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -58,22 +60,36 @@ public class BlockchainServiceImpl implements BlockchainService {
     private final Admin admin;
     private static final String emptyAddress = "0x0000000000000000000000000000000000000000";
 
-    private static final int defaultGasPrice = 3;
+
+    private final BlockchainProperties networkConfig = null;
+
+    private int defaultGasPrice = 3000;
     private static final int defaultTokenDecimal = 18;
     private static final int defaultGasLimit = 21000;// for moac TX only, Ether is 21000
     private static final int defaultTokenGasLimit = 60000;// for moac TX only, Ether is 21000
 
     private static byte defaultBlockchainID = 100;
     public static String LOCALNODE = "http://127.0.0.1:8545/";
-    public static String TESTNET = "https://web3.testnet.moacchain.net";//"http://34.217.90.193:8932";//"http://gateway.moac.io/testnet";
+//    public static String TESTNET = "https://web3.testnet.moacchain.net";//"http://34.217.90.193:8932";//"http://gateway.moac.io/testnet";
     //Mainnet:   http://web3.moac.moacchain.net, China,  https://web3.moac.moacchain.net.
     //Testnet:   http://gateway.moac.io/testnet, China,https://web3.testnet.moacchain.net
     //Local node: http://localhost:8545
     public BlockchainServiceImpl() {
 
+
         //This service is running on the address passed as a parameter below
-        this.web3j = Web3j.build(new HttpService(LOCALNODE));
-        this.admin = Admin.build(new HttpService(LOCALNODE));
+        if ( networkConfig == null){
+            //default uses local node as config
+            this.web3j = Web3j.build(new HttpService(LOCALNODE));
+            this.admin = Admin.build(new HttpService(LOCALNODE));
+            log.info("BlockchainServiceImpl: using LOCAL NODE===============" );
+        }else{
+            this.web3j = Web3j.build(new HttpService(networkConfig.getNetwork()));
+            this.admin = Admin.build(new HttpService(networkConfig.getNetwork()));
+            this.defaultGasPrice = networkConfig.getDefaultGasPrice();
+            log.info("BlockchainServiceImpl:"+networkConfig.getNetwork()+" info!!!" );
+        }
+
         // Check to make sure the defaultBlockchainID matches the connecting node
         try {
             EthChainId chainId = web3j.ethChainId().send();
@@ -106,17 +122,24 @@ public class BlockchainServiceImpl implements BlockchainService {
 
     /**
      * Web3j: 查询原生币余额功能
+     * 增加检测输入账户的合理性，抛出地址错误
      */
     @Override
     public BigInteger getAccountBalance(String accountAddress) {
         BigInteger balance = null;
-        try {
-            EthGetBalance ethGetBalance = web3j.ethGetBalance(accountAddress, DefaultBlockParameterName.LATEST).send();
-            balance = ethGetBalance.getBalance();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        if (WalletUtils.isValidAddress(accountAddress)){
+            try {
+                EthGetBalance ethGetBalance = web3j.ethGetBalance(accountAddress, DefaultBlockParameterName.LATEST).send();
+                balance = ethGetBalance.getBalance();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            log.debug("查询原生币address " + accountAddress + " balance " + balance + "wei");
+        }else{
+            throw new BusinessException(ResponseStatus.BLOCKCHAIN_ACCOUNT_ERROR);
         }
-        log.debug("查询原生币address " + accountAddress + " balance " + balance + "wei");
+
         return balance;
     }
 
@@ -148,6 +171,11 @@ public class BlockchainServiceImpl implements BlockchainService {
             e.printStackTrace();
         }
         log.debug("查询通证："+tokenAddress+" 账户 " + accountAddress + " balance " + balanceValue + " decimal");
+        // debug only
+        if (networkConfig != null){
+            log.info("getTokenBalance:"+networkConfig.getName()+" info!!!" );
+        }
+
         return balanceValue;
     }
 
@@ -427,6 +455,7 @@ public class BlockchainServiceImpl implements BlockchainService {
     public String decryptWallet(String keystore, String password) {
         String privateKey = null;
         ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();
+        log.info("decryptWallet 钱包密码：<"+password+">");
         try {
             WalletFile walletFile = objectMapper.readValue(keystore, WalletFile.class);
             ECKeyPair ecKeyPair = null;
@@ -446,4 +475,16 @@ public class BlockchainServiceImpl implements BlockchainService {
         return "0x"+privateKey;
     }
 
+    /**
+     * 使用内置的随机数和用户的公钥地址，验证用户签名，
+     * @param publicAddress 用户钱包文件的String
+     * @param signature 用户钱包密码
+     * @return 返回成功与否
+     */
+    @Override
+    public Boolean verifySignature(String publicAddress, String signature)
+    {
+        return false;
+
+    }
 }

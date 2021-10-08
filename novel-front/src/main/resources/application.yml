@@ -68,7 +68,29 @@ book:
     #价值(屋币)
     value: 5
 
-
+#区块链信息
+#    // blockchain network settings
+#    private String name;
+#    private String network;
+#    private String description;
+#    private byte defaultBlockchainID;// = 100;
+#
+#    // transaction settings
+#    private int defaultGasPrice;
+#    private  int defaultGasLimit;// = 21000;// for moac TX only, Ether is 21000
+#
+#    // contract settings
+#    private  int defaultTokenGasLimit;// = 60000;// for moac TX only, Ether is 21000
+#    private int defaultTokenDecimal;// = 18;
+blockchain:
+  name: testnetwork
+  network: https://web3.testnet.moacchain.net
+  description: China MOAC testnetwork url
+  network-id: 101
+  gas-price: 40000
+  gas-limit: 21000
+  token-gas-limit: 200000
+  token-decimal: 18
 
 
 

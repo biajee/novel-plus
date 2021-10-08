@@ -49,5 +49,11 @@ public class ContractController {
         return ResultBean.ok(blockchainService.getBlockNumber());
     }
 
-
+    /**
+     * 查询账户的原生通证余额
+     * */
+    @GetMapping("getAccountBalance")
+    public ResultBean getAccountBalance(String accountAddress){
+        return ResultBean.ok(blockchainService.getAccountBalance(accountAddress));
+    }
 }

@@ -218,4 +218,20 @@ public interface UserService {
      * @return privateKey
      */
     String getPrivateKey(Long userId,String password);
+
+    /**
+     * 用户使用区块链账户登陆第一步
+     * 根据输入的账户信息返回用于签名验证的随机整数。
+     * @param user 用户登陆信息类
+     * @return 随机整数，用于签名验证
+     * */
+    int getUserAccountNonce(String publicAddress);
+
+    /**
+     * 用户使用区块链账户登陆第二步
+     * 根据返回的签名信息验证用户账户
+     * @param user 用户登陆信息类，包括签名信息
+     * @return jwt载体信息类
+     * */
+    UserDetails loginWithBlockchainAccountSignature(String publicAddress, String signature);
 }

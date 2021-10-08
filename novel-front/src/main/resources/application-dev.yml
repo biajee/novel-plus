@@ -2,7 +2,7 @@ spring:
   profiles:
     include: [common-dev]
 
-
+#图片未知存储
 pic:
   save:
     type: 1 #图片保存方式, 1不保存，使用爬取的网络图片 ，2保存在自己的存储介质

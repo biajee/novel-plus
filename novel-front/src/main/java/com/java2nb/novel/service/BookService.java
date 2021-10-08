@@ -44,7 +44,7 @@ public interface BookService {
 
     /**
      * 分页搜索
-     * @param params 搜索参数
+     * @param params 搜索参数   a
      * @param page 页码
      * @param pageSize 分页大小
      * @return 小说集合分页信息
