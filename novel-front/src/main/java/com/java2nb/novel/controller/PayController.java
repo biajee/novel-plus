@@ -159,14 +159,14 @@ public class PayController extends BaseController {
      * 3. 从 blockchainPay.html 页面提交相应信息到 blockchainPay/notify
      */
     @SneakyThrows
-    @PostMapping("blockchainPay")
-    public void blockchainPay(Integer payAmount,HttpServletRequest request,HttpServletResponse httpResponse) {
+    @PostMapping("blockchainTx")
+    public void blockchainTx(Integer payAmount,HttpServletRequest request,HttpServletResponse httpResponse) {
 
         // 需要检查payAmount是否为大于0的整数值
         if ( payAmount > 0){
             UserDetails userDetails = getUserDetails(request);
             //debuging to show user name
-            log.info("blockchainPay： " + userDetails.getUsername(), "支付数额： ", payAmount);
+            log.info("blockchainTx： " + userDetails.getUsername(), "支付数额： ", payAmount);
 
             if (userDetails == null) {
                 //未登录，跳转到登陆页面
@@ -175,7 +175,7 @@ public class PayController extends BaseController {
             } else {
                 //创建充值订单
                 Long outTradeNo = orderService.createPayOrder((byte) 1, payAmount, userDetails.getId());
-                log.debug("blockchainPay 创建充值订单:", outTradeNo, "支付数额： ", payAmount, "账户：", userDetails.getAccountAddress());
+                log.debug("blockchainTx 创建充值订单:", outTradeNo, "支付数额： ", payAmount, "账户：", userDetails.getAccountAddress());
     //            httpResponse.sendRedirect("/pay/blockchainPay/notify?out_trade_no="+outTradeNo);
 
                 httpResponse.sendRedirect("/pay/blockchainPay.html?payAmount=" + payAmount + "&outTradeNo=" + outTradeNo);
@@ -196,11 +196,11 @@ public class PayController extends BaseController {
      * 提交并等待Receipt，然后提交buyRecord到数据库
      * 需要显示用户的区块链钱包信息，并要求输入
      * TODO 如果是用MetaMask，那么需要签名并发送交易
-     * TODO 需异步等待并返回结果
+     * TODO 需异步等待并返回结果 ,HttpServletResponse httpResponse
      * */
     @SneakyThrows
-    @PostMapping("blockchainPaySubmitTx")
-    public ResultBean blockchainPayNotify(HttpServletRequest request,HttpServletResponse httpResponse){
+    @PostMapping("blockchainPay")
+    public ResultBean blockchainPay(HttpServletRequest request){
 
         UserDetails userDetails = getUserDetails(request);
 
@@ -211,9 +211,7 @@ public class PayController extends BaseController {
 //        String txReceipt = request.getParameter("txReceipt");
 
         String toAddress = "0x7312F4B8A4457a36827f185325Fd6B66a3f8BB8B";//系统固定钱包，将来需要作为设置，从xml文件中读取
-//
         String inputPassword = request.getParameter("password");
-
         Integer payAmount = new Integer(request.getParameter("amount"));
 
         //商户订单号
@@ -239,10 +237,11 @@ public class PayController extends BaseController {
         if(txReceipt.length() > 0){
             String tradeStatus = "TRADE_SUCCESS";
 
-            log.debug("交易成功： ", txReceipt, "tradeStatus：", tradeStatus);
+            log.debug("交易成功： " +txReceipt+"tradeStatus："+tradeStatus);
             //更新订单状态并存入mysql数据库
             orderService.updatePayOrder(Long.parseLong(outTradeNo), txReceipt, tradeStatus);
 
+            log.info("更新订单完成： "+txReceipt);
             // 构建返回信息
             Map<String, Object> data = new HashMap<>(2);
             data.put("tradeNumber", outTradeNo);

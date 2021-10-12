@@ -13,7 +13,7 @@
 </div>
 
 <!--The form is used to get user wallet password or signed raw tx,
-    then submit to payController blockchainPay/notify for further actions.
+    then submit to payController blockchainSubmitTx for further actions.
 -->
 <form action="./blockchainPay.html" method="post" id="txform" name="txform">
 <div class="main box_center cf">
@@ -156,12 +156,13 @@ console.log("Return balance in blockchainPay:",data.data);
 
         $.ajax({
             type: "POST",
-            url: "/pay/blockchainPaySubmitTx",
+            url: "/pay/blockchainPay",
             data: {"amount": amount, "password": password,"tradeNumber": tradeNumber},
             dataType: "json",
             success: function (data) {
                 if (data.code == 200) {
                     // 充值成功，返回上一级页面
+                    console.log("after blockchainPaySubmitTx", data.data);
                     window.location.href = "/pay/index.html";
                 } else {
                     $("#LabErr").html(data.msg);
@@ -169,51 +170,14 @@ console.log("Return balance in blockchainPay:",data.data);
 
             },
             error: function () {
+            window.location.href = "/pay/index.html";
+            console.log("error:", error);
                 layer.alert('网络异常');
             }
         })
 
     })
 
-    // 使用web3j直接对接区块链后台，完成原生通证交易
-    // 充值功能，默认使用书城的账户地址为目的地址，
-    //
-    // 将来为获取通证的过程
-    // 向测试账户地址发送系统原生币
-    function payWithBlockchain() {
-     var txValue = document.getElementById("total_amount").value;
-     var inPassword = document.getElementById("src_password").value;
-     //var desAddress = document.getElementById("to_addrress").value;
-     var desAddress="0x7312F4B8A4457a36827f185325Fd6B66a3f8BB8B";
-
-     console.log("toAddress:",desAddress, " value:", txValue, "pass:", inPassword);
-        $.ajax({
-            type: "POST",
-            url: "/user/payWithBlockchain",
-            data: {'toAddress': desAddress, 'password':inPassword, 'value': txValue},
-            dataType: "json",
-            success: function (data) {
-                if (data.code == 200) {
-                    $("#tx_hash").html(data.data);
-                    //显示交易HASH
-                    console.log("payWithBlockchain.data:", data.data);
-                    console.log("ID userAddress:", userAddress);//Set in getUserInfo
-
-                } else if (data.code == 1001) {
-                    //未登录
-                    location.href = '/user/login.html?originUrl=' + decodeURIComponent(location.href);
-
-                } else {
-                    layer.alert(data.msg);
-                }
-
-            },
-            error: function () {
-                layer.alert('网络异常');
-            }
-        })
-
-    }
 </script>
 
 

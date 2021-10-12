@@ -13,7 +13,7 @@
 </div>
 
 <!--修改替换aliPay过程，转为区块链账户支付-->
-<form action="/pay/blockchainPay" method="post" id="payform" name="payform">
+<form action="/pay/blockchainTx" method="post" id="payform" name="payform">
     <div class="main box_center cf">
 
         <div class="channelWrap channelPay cf">
@@ -136,7 +136,7 @@
         $("#pValue").val($(this).attr("vals"));
         console.log("Pay amount:", $(this).attr("vals"));
 
-        // 会跳转到 /pay/blockchainPay 里面的 POST 方法
+        // 会跳转到 /pay/blockchainTx里面的 POST 方法
         $("#payform").submit();
 
     });

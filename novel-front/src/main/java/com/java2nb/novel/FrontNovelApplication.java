@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @author Administrator
+ * 增加区块链的连接节点
  */
 @SpringBootApplication
 @EnableTransactionManagement

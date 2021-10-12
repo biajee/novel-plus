@@ -47,10 +47,13 @@ public class OrderServiceImpl implements OrderService {
         return outTradeNo;
     }
 
+    /*
+     * 增加 payOrder 中的tradeNo，使用区块链的tx receipt
+     */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updatePayOrder(Long outTradeNo, String tradeNo, String tradeStatus) {
-        SelectStatementProvider selectStatement = select(OrderPayDynamicSqlSupport.id,OrderPayDynamicSqlSupport.payStatus,OrderPayDynamicSqlSupport.totalAmount,OrderPayDynamicSqlSupport.userId)
+        SelectStatementProvider selectStatement = select(OrderPayDynamicSqlSupport.id,OrderPayDynamicSqlSupport.tradeNo,OrderPayDynamicSqlSupport.payStatus,OrderPayDynamicSqlSupport.totalAmount,OrderPayDynamicSqlSupport.userId)
                 .from(OrderPayDynamicSqlSupport.orderPay)
                 .where(OrderPayDynamicSqlSupport.outTradeNo, isEqualTo(outTradeNo))
                 .build()
@@ -66,6 +69,7 @@ public class OrderServiceImpl implements OrderService {
                 //1.更新订单状态为成功
                 orderPay.setPayStatus((byte) 1);
                 orderPay.setUpdateTime(new Date());
+                orderPay.setTradeNo(tradeNo);
                 orderPayMapper.updateByPrimaryKeySelective(orderPay);
 
                 //2.增加用户余额

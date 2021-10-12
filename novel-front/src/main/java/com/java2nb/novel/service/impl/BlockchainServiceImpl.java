@@ -7,6 +7,7 @@ import com.java2nb.novel.service.BlockchainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.abi.datatypes.generated.Uint8;
@@ -30,6 +31,7 @@ import org.web3j.utils.Numeric;
 import org.web3j.utils.Convert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import java.math.BigDecimal;
 import java.io.IOException;
@@ -74,9 +76,10 @@ public class BlockchainServiceImpl implements BlockchainService {
     //Mainnet:   http://web3.moac.moacchain.net, China,  https://web3.moac.moacchain.net.
     //Testnet:   http://gateway.moac.io/testnet, China,https://web3.testnet.moacchain.net
     //Local node: http://localhost:8545
+    @Autowired
     public BlockchainServiceImpl() {
 
-
+//        this.networkConfig = inNetworkConfig;
         //This service is running on the address passed as a parameter below
         if ( networkConfig == null){
             //default uses local node as config

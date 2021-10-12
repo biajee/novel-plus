@@ -439,13 +439,14 @@ INSERT INTO `news_category` VALUES ('3', '公告', '11', null, null, null, null)
 
 -- ----------------------------
 -- Table structure for order_pay
+-- 增加 trade_no 变量的长度到67，以容纳区块链交易的HASH值。
 -- ----------------------------
 DROP TABLE IF EXISTS `order_pay`;
 CREATE TABLE `order_pay` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `out_trade_no` bigint(20) NOT NULL COMMENT '商户订单号',
-  `trade_no` varchar(64) DEFAULT NULL COMMENT '支付宝/微信交易号',
-  `pay_channel` tinyint(1) NOT NULL DEFAULT '1' COMMENT '支付渠道，1：支付宝，2：微信',
+  `trade_no` varchar(67) DEFAULT NULL COMMENT '支付宝/区块链交易号',
+  `pay_channel` tinyint(1) NOT NULL DEFAULT '1' COMMENT '支付渠道，1：支付宝，2：区块链',
   `total_amount` int(11) NOT NULL COMMENT '交易金额(单位元)',
   `user_id` bigint(20) NOT NULL COMMENT '支付用户ID',
   `pay_status` tinyint(1) DEFAULT '2' COMMENT '支付状态：0：支付失败，1：支付成功，2：待支付',
