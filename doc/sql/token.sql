@@ -16,36 +16,11 @@ Date: 2021-08-07 21:42:20
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for user_account
--- 用户区块链账户信息，包括账户地址、私钥、keystore和密码
--- 钱包文件长度一般不超过500个bytes；
--- 一个用户名称有可能对应多个钱包地址；
--- TODO： 用户私钥将来需要替换，目前仅为DEBUG用。
--- ----------------------------
-DROP TABLE IF EXISTS `user_account`;
-CREATE TABLE `user_account` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
-  `blockchain_address` varchar(42) DEFAULT NULL COMMENT '用户账户地址',
-  `private_key` varchar(100) DEFAULT NULL COMMENT '用户私钥',
-  `keystore` varchar(500) DEFAULT NULL COMMENT '用户钱包文件',
-  `password` varchar(50) DEFAULT NULL COMMENT '钱包文件密码',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='账户';
-
--- ----------------------------
--- Records of 账户
--- 本地节点测试账户
--- ----------------------------
-INSERT INTO `user_account` VALUES ('1', '1260400284744613891', '0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b', '0xc75a5f85ef779dcf95c651612efb3c3b9a6dfafb1bb5375905454d9fc8be8a6b', null, null);
-INSERT INTO `user_account` VALUES ('2', '1413956884249956352', '0xa8863fc8ce3816411378685223c03daae9770ebb', null, null, null);
-
--- ----------------------------
 -- Table structure for user_wallet
 -- 用户区块链账户信息，包括账户地址、私钥、keystore和密码
 -- 钱包文件长度一般不超过500个bytes；
 -- 一个用户ID有可能对应多个钱包；
--- TODO： 用户私钥将来需要替换，目前仅为DEBUG用。
+-- TODO： 用户私钥将来需要去掉，目前仅为DEBUG用。
 -- ----------------------------
 DROP TABLE IF EXISTS `user_wallet`;
 CREATE TABLE `user_wallet` (
@@ -62,7 +37,7 @@ CREATE TABLE `user_wallet` (
 -- 本地节点测试账户
 -- ----------------------------
 INSERT INTO `user_wallet` VALUES ('1', '1260400284744613891', '0x7312f4b8a4457a36827f185325fd6b66a3f8bb8b', '0xc75a5f85ef779dcf95c651612efb3c3b9a6dfafb1bb5375905454d9fc8be8a6b', null);
-INSERT INTO `user_wallet` VALUES ('2', '1413956884249956352', '0xa8863fc8ce3816411378685223c03daae9770ebb', null, null);
+INSERT INTO `user_wallet` VALUES ('2', '1413956884249956352', '0xcbd6dff6e01e88c7dd433cd80cf5b2e93a595f4f', 'c9de7e153a558834aa65cf489757cbbec7639621c99860ad9e5b0fbea374b35d', '{\"address\":\"cbd6dff6e01e88c7dd433cd80cf5b2e93a595f4f\",\"id\":\"292ba4b1-10a6-40c3-a778-17c122372020\",\"version\":3,\"crypto\":{\"cipher\":\"aes-128-ctr\",\"ciphertext\":\"eb00901481fdba7dca47a4fecf95789a501445f79027f8fdbed8ef9a713d9812\",\"cipherparams\":{\"iv\":\"5984c7f1ad3123c1e22bc90335f72888\"},\"kdf\":\"scrypt\",\"kdfparams\":{\"dklen\":32,\"n\":262144,\"p\":1,\"r\":8,\"salt\":\"aefbd41bb53cc332c04654abc58405c59266bf6840f921df2b93ed2e4ada3d1b\"},\"mac\":\"67d27a8fc7d5d5940cd3b0190be05639b4741ed408a80c1a3a0ec3c12af6caab\"}}');
 
 
 -- ----------------------------

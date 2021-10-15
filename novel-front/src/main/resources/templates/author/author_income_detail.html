@@ -16,7 +16,7 @@
     <div class="mainNav" id="mainNav">
         <div class="box_center cf" style="text-align: center;height: 44px;line-height: 48px;color: #fff;font-size: 16px;">
 
-            小说精品屋作家管理
+            小说精品屋区块链平台作家管理
 
         </div>
     </div>
@@ -121,7 +121,7 @@
         if(bookId){
             data.bookId = bookId;
         }
-console.log("author income detail data:", data);
+
         $.ajax({
             type: "get",
             url: "/author/listIncomeDailyByPage",
@@ -207,7 +207,6 @@ console.log("author income detail data:", data);
                 if (data.code == 200) {
 
                     location.reload();
-
 
                 } else if (data.code == 1001) {
                     //未登录

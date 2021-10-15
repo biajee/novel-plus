@@ -159,9 +159,6 @@
             searchData.sort = sort;
         }
 
-
-
-
         $.ajax({
             type: "get",
             url: "/book/searchByPage",
@@ -224,7 +221,6 @@
 
     }
 
-
     function listBookCategory(c) {
         $.ajax({
             type: "get",
@@ -276,8 +272,6 @@
                         }
                         search(1, 20);
                     }
-
-
                 } else {
                     layer.alert(data.msg);
                 }
